@@ -20,14 +20,20 @@ import Row from 'react-bootstrap/Row'
 import CalendarHeatmap from 'reactjs-calendar-heatmap'
 import moment from 'moment';
 
+// process.env.REACT_APP_FIREBASE_AUTH_DOMAIN
+// process.env.REACT_APP_FIREBASE_PROJ_ID
+// process.env.REACT_APP_FIREBASE_S_BUCKET
+// process.env.REACT_APP_FIREBASE_MSEND_ID
+// process.env.REACT_APP_FIREBASE_APP_ID
+
 if (!firebase.apps.length) {
   firebase.initializeApp({
-    apiKey: "AIzaSyAZfYl7NnQYt33R6b0aN1MRc1A_MqpLcQw",
-    authDomain: "doggoyaam.firebaseapp.com",
-    projectId: "doggoyaam",
-    storageBucket: "doggoyaam.appspot.com",
-    messagingSenderId: "748545462168",
-    appId: "1:748545462168:web:d04a9d32a27de7a0eae5ed"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJ_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_S_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MSEND_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID
   });
 } else {
   firebase.app(); // if already initialized, use that one
