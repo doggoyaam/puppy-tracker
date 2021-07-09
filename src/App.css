@@ -293,6 +293,24 @@ img {
   height: 100%;
 
 }
+.timeline .timeline-container .propic {
+  position: absolute;
+  right: 40px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  text-align: center;
+}
+.timeline .timeline-container .propic img {
+  position: absolute;
+  right: -35px;
+  top: 5px;
+
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  text-align: center;
+}
 .timeline .timeline-container .timeline-icon {
   position: absolute;
   left: -82px;
@@ -321,6 +339,8 @@ img {
 }
 .timeline .timeline-container .timeline-body p {
   color: #000000;
+  font-size: 11px;
+
 }
 /* arrow card pointer */
 .timeline .timeline-container .timeline-body:before {
@@ -336,7 +356,7 @@ img {
   border-radius: 0 0 0 2px;
 }
 .timeline .timeline-container .timeline-body .timeline-title {
-  margin-bottom: 1.4rem;
+  margin-bottom: 5px;
 }
 .timeline .timeline-container .timeline-body .timeline-title .badge {
   background: #4f537b;
@@ -349,28 +369,44 @@ img {
   font-weight: 300;
   font-style: italic;
   opacity: 0.4;
-  margin-top: 16px;
   font-size: 11px;
 }
-.timeline .timeline-container.primary .badge,
-.timeline .timeline-container.primary .timeline-icon {
-  background: #1d8cf8 !important;
+.timeline .timeline-container.evnap .badge,
+.timeline .timeline-container.evnap .timeline-icon {
+  background: #70587c !important;
+  border: 3px solid #FFF;
+  border-radius: 18px;
+  /* background: linear-gradient( -45deg, blue, blue 49%, white 49%, white 51%, red 51% );  */
 }
-.timeline .timeline-container.info .badge,
-.timeline .timeline-container.info .timeline-icon {
-  background: #11cdef !important;
+.timeline .timeline-container.evfood .badge,
+.timeline .timeline-container.evfood .timeline-icon {
+  background: #3a7d44 !important;
+  border: 3px solid #FFF;
+  border-radius: 18px;
 }
-.timeline .timeline-container.success .badge,
-.timeline .timeline-container.success .timeline-icon {
-  background: #00bf9a !important;
+.timeline .timeline-container.evwater .badge,
+.timeline .timeline-container.evwater .timeline-icon {
+  background: #62bbc1 !important;
+  border: 3px solid #FFF;
+  border-radius: 18px;
 }
-.timeline .timeline-container.warning .badge,
-.timeline .timeline-container.warning .timeline-icon {
-  background: #ff8d72 !important;
+.timeline .timeline-container.evaccident .badge,
+.timeline .timeline-container.evaccident .timeline-icon {
+  background: #e40066 !important;
+  border: 3px solid #FFF;
+  border-radius: 18px;
 }
-.timeline .timeline-container.danger .badge,
-.timeline .timeline-container.danger .timeline-icon {
-  background: #fd5d93 !important;
+.timeline .timeline-container.evpoop .badge,
+.timeline .timeline-container.evpoop .timeline-icon {
+  background: #2C2217 !important;
+  border: 3px solid #FFF;
+  border-radius: 18px;
+}
+.timeline .timeline-container.evpee .badge,
+.timeline .timeline-container.evpee .timeline-icon {
+  background: #B69873  !important;
+  border: 3px solid #FFF;
+  border-radius: 18px;
 }
 
 

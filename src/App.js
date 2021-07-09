@@ -143,7 +143,8 @@ function App() {
       start_time: stDt,
       end_time: enDt,
       note: evData.notes,
-      uid: uid
+      uid: uid,
+      photoURL: photoURL
     });
 
   }
@@ -153,22 +154,61 @@ function App() {
 
 
   const handleCloseNap = () => setShowNap(false);
-  const handleShowNap = () => setShowNap(true);
+  const handleShowNap = () => {
+    // set the time appropriately
+    console.log("Using effect show nap ndate");
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    let nowTimeStr = now.toISOString().slice(0, -1);
+    console.log("Now time", nowTimeStr);
+    setNowTimeValue(nowTimeStr);
+
+    // set now + 1 hour for default nap time interval 
+    var tp1 = new Date();
+    tp1.setHours(now.getHours() + 1);
+    // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
+    let nowtp1TimeStr = tp1.toISOString().slice(0, -1);
+    console.log("Now TP1 time", nowtp1TimeStr);
+    setNowp1TimeValue(nowtp1TimeStr);
+
+    setShowNap(true);
+  }
   const handleSaveNap = (e) => {
     e.preventDefault();
 
     console.log("Saving nap");
-    console.log(e);
+    // console.log(e);
     const formData = new FormData(e.target),
       formDataObj = Object.fromEntries(formData.entries());
-    console.log(formDataObj);
+    // console.log(formDataObj);
     saveEvent("Nap", formDataObj);
-    return false;
+    handleCloseNap();
+    return true;
 
   };
 
   const handleCloseFood = () => setShowFood(false);
-  const handleShowFood = () => setShowFood(true);
+  const handleShowFood = () => {
+    // also gotta update current time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    let nowTimeStr = now.toISOString().slice(0, -1);
+    // console.log("Now time", nowTimeStr);
+    setNowTimeValue(nowTimeStr);
+
+    // set now + 3 min for default food, accident and poop time interval 
+    const tp3m = new Date();
+    // console.log(tp3m);
+    // do we first need to set the timezone offset?
+    // tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset());
+    tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset() + 3);
+    var nowtp3mTimeStr = tp3m.toISOString().slice(0, -1);
+    // console.log("Now TP3m time", nowtp3mTimeStr);
+    setNowp3mTimeValue(nowtp3mTimeStr);
+
+    setShowFood(true);
+
+  }
   const handleSaveFood = (e) => {
     e.preventDefault();
 
@@ -176,14 +216,33 @@ function App() {
     // console.log(e);
     const formData = new FormData(e.target),
       formDataObj = Object.fromEntries(formData.entries());
-    console.log(formDataObj);
+    // console.log(formDataObj);
     saveEvent("Food", formDataObj);
-    return false;
+    handleCloseFood();
+    return true;
 
   };
 
   const handleCloseWater = () => setShowWater(false);
-  const handleShowWater = () => setShowWater(true);
+  const handleShowWater = () => {
+
+    // also gotta update current time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    let nowTimeStr = now.toISOString().slice(0, -1);
+    // console.log("Now time", nowTimeStr);
+    setNowTimeValue(nowTimeStr);
+
+    // set now + 1 min for default pee and water time interval 
+    var tp1m = new Date();
+    tp1m.setMinutes(tp1m.getMinutes() - tp1m.getTimezoneOffset() + 1);
+    // tp1m.setMinutes(now.getMinutes() + 1);
+    // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
+    let nowtp1mTimeStr = tp1m.toISOString().slice(0, -1);
+    // console.log("Now TP1m time", nowtp1mTimeStr);
+    setNowp1mTimeValue(nowtp1mTimeStr);
+    setShowWater(true);
+  }
   const handleSaveWater = (e) => {
     e.preventDefault();
 
@@ -193,12 +252,32 @@ function App() {
       formDataObj = Object.fromEntries(formData.entries());
     console.log(formDataObj);
     saveEvent("Water", formDataObj);
-    return false;
+    handleCloseWater();
+    return true;
 
   };
 
   const handleCloseAccdnt = () => setShowAccdnt(false);
-  const handleShowAccdnt = () => setShowAccdnt(true);
+  const handleShowAccdnt = () => {
+    // also gotta update current time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    let nowTimeStr = now.toISOString().slice(0, -1);
+    // console.log("Now time", nowTimeStr);
+    setNowTimeValue(nowTimeStr);
+
+
+    // set now + 3 min for default food, accident and poop time interval 
+    const tp3m = new Date();
+    // console.log(tp3m);
+    // do we first need to set the timezone offset?
+    // tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset());
+    tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset() + 3);
+    var nowtp3mTimeStr = tp3m.toISOString().slice(0, -1);
+    // console.log("Now TP3m time", nowtp3mTimeStr);
+    setNowp3mTimeValue(nowtp3mTimeStr);
+    setShowAccdnt(true);
+  }
   const handleSaveAccdnt = (e) => {
     e.preventDefault();
 
@@ -208,12 +287,32 @@ function App() {
       formDataObj = Object.fromEntries(formData.entries());
     console.log(formDataObj);
     saveEvent("Accident", formDataObj);
-    return false;
+    handleCloseAccdnt();
+    return true;
 
   };
 
   const handleClosePoop = () => setShowPoop(false);
-  const handleShowPoop = () => setShowPoop(true);
+  const handleShowPoop = () => {
+    // also gotta update current time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    let nowTimeStr = now.toISOString().slice(0, -1);
+    // console.log("Now time", nowTimeStr);
+    setNowTimeValue(nowTimeStr);
+
+
+    // set now + 3 min for default food, accident and poop time interval 
+    const tp3m = new Date();
+    // console.log(tp3m);
+    // do we first need to set the timezone offset?
+    // tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset());
+    tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset() + 3);
+    var nowtp3mTimeStr = tp3m.toISOString().slice(0, -1);
+    // console.log("Now TP3m time", nowtp3mTimeStr);
+    setNowp3mTimeValue(nowtp3mTimeStr);
+    setShowPoop(true);
+  }
   const handleSavePoop = (e) => {
     e.preventDefault();
 
@@ -223,12 +322,30 @@ function App() {
       formDataObj = Object.fromEntries(formData.entries());
     console.log(formDataObj);
     saveEvent("Poop", formDataObj);
-    return false;
+    handleClosePoop();
+    return true;
 
   };
 
   const handleClosePee = () => setShowPee(false);
-  const handleShowPee = () => setShowPee(true);
+  const handleShowPee = () => {
+    // also gotta update current time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    let nowTimeStr = now.toISOString().slice(0, -1);
+    // console.log("Now time", nowTimeStr);
+    setNowTimeValue(nowTimeStr);
+
+    // set now + 1 min for default pee and water time interval 
+    var tp1m = new Date();
+    tp1m.setMinutes(tp1m.getMinutes() - tp1m.getTimezoneOffset() + 1);
+    // tp1m.setMinutes(now.getMinutes() + 1);
+    // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
+    let nowtp1mTimeStr = tp1m.toISOString().slice(0, -1);
+    // console.log("Now TP1m time", nowtp1mTimeStr);
+    setNowp1mTimeValue(nowtp1mTimeStr);
+    setShowPee(true);
+  }
   const handleSavePee = (e) => {
     e.preventDefault();
 
@@ -238,7 +355,8 @@ function App() {
       formDataObj = Object.fromEntries(formData.entries());
     console.log(formDataObj);
     saveEvent("Pee", formDataObj);
-    return false;
+    handleClosePee();
+    return true;
 
   };
 
@@ -265,12 +383,8 @@ function App() {
           </div>
 
 
-          <div class="timelineblur">
-
-            <h3>Updates</h3>
-            <label>23 in the last 7 hours</label>
+          <div>
             <TimeLine />
-
           </div>
 
         </div>
@@ -465,7 +579,7 @@ function App() {
                   <Modal.Title>Modal heading</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <Form.Group controlId="exampleForm.ControlInput4">
+                  <Form.Group controlId="exampleForm.ControlInput5">
                     <Form.Label>Event Type: <b>Poop</b> </Form.Label>
                     <br></br>
                     <Form.Label>Start Time</Form.Label>
@@ -507,7 +621,7 @@ function App() {
                   <Modal.Title>Modal heading</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <Form.Group controlId="exampleForm.ControlInput4">
+                  <Form.Group controlId="exampleForm.ControlInput6">
                     <Form.Label>Event Type: <b>Pee</b> </Form.Label>
                     <br></br>
                     <Form.Label>Start Time</Form.Label>
@@ -563,11 +677,87 @@ function App() {
 
 
 
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+const _ms_to_sec = 1000;
+const _ms_to_min = 1000 * 60;
+const _ms_to_hour = 1000 * 60 * 60;
 
-function TimeLine(props) {
+
+// a and b are javascript Date objects
+function dateDiffs(a, b) {
+  // Discard the time and time-zone information.
+  // const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  // const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  const d = Math.abs(b - a);
+  console.log(d);
+
+  const secs = d / _ms_to_sec;
+  const mins = d / _ms_to_min;
+  const hours = d / _ms_to_hour;
+  const days = Math.floor(d / _MS_PER_DAY);
+  console.log(secs, mins, hours, days);
+
+  const ret = {
+    seconds: secs,
+    minutes: mins,
+    hours: hours,
+    days: days
+  }
+  return ret;
+
+  // return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+}
+
+
+// function to take in the above date oobject and return a human redible subtitle
+// dictating how long ago the event took place
+// scheme: 
+// - If minutes <= 1 . Display seconds ago
+// - If hours <= 1. Display minutes, seconds ago
+// - If days <= 1. Display hours, minutes ago
+// - If days > 0. Display Days ago
+
+
+function fmtTimeAgo(dObj) {
+  var s = null;
+
+  if (dObj.minutes <= 1) {
+    var secsAll = Math.floor(dObj.seconds);
+
+    s = `${secsAll} seconds ago`;
+  }
+  else if (dObj.hours <= 1) {
+    var minsAll = Math.floor(dObj.minutes);
+
+    s = `${minsAll} minutes ago`;
+  }
+  else if (dObj.days <= 1) {
+    var hrs = Math.floor(dObj.hours);
+    var minsAll = Math.floor(dObj.minutes);
+    var minsLeft = minsAll - hrs * 60;
+    s = `${hrs} hours ${minsLeft} minutes ago`;
+
+  }
+  else if (dObj.days > 1) {
+    // var hrs = Math.floor(dObj.hours);
+    // var minsAll = Math.floor(dObj.minutes);
+    // var minsLeft = minsAll - hrs * 60;
+    s = `${dObj.days} days ago`;
+
+  }
+  return s;
+
+}
+
+
+function TimeLine() {
   console.log("Timelining");
-  const trackDate = props.tdate;
-  const trackData = props.tdata;
+  const trackData = null;
+  const dgevents = firestore.collection('testevents');
+
+  const query = dgevents.orderBy('start_time', 'desc');
+  const [devents] = useCollectionData(query, { idField: 'id' });
+  console.log(devents);
 
 
 
@@ -577,57 +767,156 @@ function TimeLine(props) {
 
   var trackDataAll = [];
 
-  if (trackData == null) {
+  var lastAccident = null;
+
+  if (devents == null) {
     console.log("No events");
 
   }
   else {
-    var a = _.groupBy(trackData, function (n) {
-      return n.create_date;
+    var hms = devents.map((item, index) => {
+      console.log(item.type);
+
+      console.log(item.start_time);
+      var stTime = item.start_time;
+
+      console.log(stTime.toDate());
+      // test it
+      const now = new Date();
+      const dObj = dateDiffs(stTime.toDate(), now);
+      console.log(dObj);
+      const subStr = fmtTimeAgo(dObj);
+      console.log(subStr);
+      const messageClass = item.uid === auth.currentUser.uid ? 'sent' : 'received';
+      console.log(item, messageClass);
+
+
+
+
+      if (item.type === "Nap") {
+        return (
+          <div class="timeline-container evnap">
+            <div class="timeline-icon">
+
+
+
+            </div>
+            <div class="timeline-body">
+              <div class="propic">
+                <img style={{ scale: 0.5 }} src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+
+              </div>
+              <h4 class="timeline-title"><span class="badge">Nap</span></h4>
+              <p>{item.note}</p>
+              <p class="timeline-subtitle">{subStr}</p>
+            </div>
+          </div>
+        )
+
+      }
+      else if (item.type === "Food") {
+        return (
+          <div class="timeline-container evfood">
+            <div class="timeline-icon">
+              <i class="far fa-grin-wink"></i>
+            </div>
+            <div class="timeline-body">
+              <h4 class="timeline-title"><span class="badge">Food</span></h4>
+              <p>{item.note}</p>
+              <p class="timeline-subtitle">{subStr}</p>
+            </div>
+          </div>
+        )
+      }
+
+      else if (item.type === "Water") {
+        return (
+          <div class="timeline-container evwater">
+            <div class="timeline-icon">
+              <i class="far fa-grin-wink"></i>
+            </div>
+            <div class="timeline-body">
+              <h4 class="timeline-title"><span class="badge">Water</span></h4>
+              <p>{item.note}</p>
+              <p class="timeline-subtitle">{subStr}</p>
+            </div>
+          </div>
+        )
+      }
+
+      else if (item.type === "Accident") {
+        // return the last accident date if not already found
+        if (lastAccident === null) {
+          lastAccident = dObj;
+        }
+        return (
+          <div class="timeline-container evaccident">
+            <div class="timeline-icon">
+              <i class="far fa-grin-wink"></i>
+            </div>
+            <div class="timeline-body">
+              <h4 class="timeline-title"><span class="badge">Accident</span></h4>
+              <p>{item.note}</p>
+              <p class="timeline-subtitle">{subStr}</p>
+            </div>
+          </div>
+        )
+      }
+
+      else if (item.type === "Poop") {
+        return (
+          <div class="timeline-container evpoop">
+            <div class="timeline-icon">
+              <i class="far fa-grin-wink"></i>
+            </div>
+            <div class="timeline-body">
+              <h4 class="timeline-title"><span class="badge">Poop</span></h4>
+              <p>{item.note}</p>
+              <p class="timeline-subtitle">{subStr}</p>
+            </div>
+          </div>
+        )
+      }
+
+      else if (item.type === "Pee") {
+        return (
+          <div class="timeline-container evpee">
+            <div class="timeline-icon">
+              <i class="far fa-grin-wink"></i>
+            </div>
+            <div class="timeline-body">
+              <h4 class="timeline-title"><span class="badge">Pee</span></h4>
+              <p>{item.note}</p>
+              <p class="timeline-subtitle">{subStr}</p>
+            </div>
+          </div>
+        )
+      }
+      else {
+        return null;
+      }
+
+
+
     });
-    console.log(a)
-    console.log(typeof (a))
-    _.forEach(a, function (val, key) {
-      console.log("Key", key);
-      console.log(val);
-
-      var details = [];
-
-      // build up the details for this date
-      _.forEach(val, function (value) {
-
-        var est = value['start_time'];
-        var estMils = est['seconds'] * 1000
-        var dtest = new Date(estMils);
-        console.log(dtest);
-        var tdateString = moment(dtest).format('YYYY-MM-DD hh:mm:ss');
-        console.log("elem", tdateString);
-        console.log("elem", typeof (tdateString));
-        console.log(value["type"]);
-        var d = {
-          "name": value["type"],
-          "date": tdateString,
-          "value": 10
-        };
-        details.push(d);
-      });
-      console.log("details");
-      console.log(details);
-
-      var dData = {
-        "date": key,
-        "details": details
-      };
-      trackDataAll.push(dData);
 
 
-    });
 
 
 
 
 
   }
+
+  var numDaysSinceLastAcc = null;
+
+  if (lastAccident !== null) {
+    console.log("Got last accident", lastAccident);
+    numDaysSinceLastAcc = lastAccident.days;
+
+  }
+
+
 
   // const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
 
@@ -643,89 +932,25 @@ function TimeLine(props) {
   // console.log(trackDataAll);
   // var overview = "day";
 
-  var hmShow = (
-    <>
+
+
+  var hmShow2 = (<>
+    <div class="timelineblur">
+
+      <h3>Updates</h3>
+      <label>{numDaysSinceLastAcc} days since last accident</label>
+
       <div class="timeline">
-        <div class="timeline-container primary">
-          <div class="timeline-icon">
-            <i class="far fa-grin-wink"></i>
-          </div>
-          <div class="timeline-body">
-            <h4 class="timeline-title"><span class="badge">Primary</span></h4>
-            <p class="timeline-subtitle">1 Hours Ago</p>
-          </div>
-        </div>
-        <div class="timeline-container danger">
-          <div class="timeline-icon">
-            <i class="far fa-grin-hearts"></i>
-          </div>
-          <div class="timeline-body">
-            <h4 class="timeline-title"><span class="badge">Danger</span></h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
-            <p class="timeline-subtitle">2 Hours Ago</p>
-          </div>
-        </div>
-        <div class="timeline-container success">
-          <div class="timeline-icon">
-            <i class="far fa-grin-tears"></i>
-          </div>
-          <div class="timeline-body">
-            <h4 class="timeline-title"><span class="badge">Success</span></h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
-            <p class="timeline-subtitle">6 Hours Ago</p>
-          </div>
-        </div>
-        <div class="timeline-container warning">
-          <div class="timeline-icon">
-            <i class="far fa-grimace"></i>
-          </div>
-          <div class="timeline-body">
-            <h4 class="timeline-title"><span class="badge">Warning</span></h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
-            <p class="timeline-subtitle">1 Day Ago</p>
-          </div>
-        </div>
-        <div class="timeline-container">
-          <div class="timeline-icon">
-            <i class="far fa-grin-beam-sweat"></i>
-          </div>
-          <div class="timeline-body">
-            <h4 class="timeline-title"><span class="badge">Secondary</span></h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
-            <p class="timeline-subtitle">3 Days Ago</p>
-          </div>
-        </div>
-        <div class="timeline-container info">
-          <div class="timeline-icon">
-            <i class="far fa-grin"></i>
-          </div>
-          <div class="timeline-body">
-            <h4 class="timeline-title"><span class="badge">Info</span></h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
-            <p class="timeline-subtitle">4 Days Ago</p>
-          </div>
-        </div>
+        {hms}
       </div>
-    </>
-  );
 
-  // if (trackDataAll.length > 0) {
-  //   hmShow = (<>
-  //     <CalendarHeatmap
-  //       data={trackDataAll}
-  //       overview={overview}
-  //     >
-  //     </CalendarHeatmap>
-  //   </>);
+    </div>
 
-  // }
-  // else {
-  //   hmShow = null;
+  </>);
 
-  // }
-  // useForceUpdate();
 
-  return hmShow;
+
+  return hmShow2;
 }
 
 
