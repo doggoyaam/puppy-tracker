@@ -22,6 +22,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import CalendarHeatmap from 'reactjs-calendar-heatmap'
 import moment from 'moment';
+import { timeMillisecond } from 'd3';
 
 // process.env.REACT_APP_FIREBASE_AUTH_DOMAIN
 // process.env.REACT_APP_FIREBASE_PROJ_ID
@@ -247,12 +248,13 @@ function App() {
   if (user !== null) {
     // show layout for logged in users
     usrLayout = (
-      <div className="App">
+      <div class="App">
         <header>🐶💩📜💬
           <SignOut />
         </header>
 
-        <div class="main">
+        <div class="maincontainer">
+
 
           <div class="cardTop">
 
@@ -260,60 +262,17 @@ function App() {
               <path fill-rule="evenodd" clip-rule="evenodd" d="M-38.5 196C-38.5 196 34 91 133.5 91C233 91 427 159 532.5 30C638 -99 518 236 518 236L-49 246.5L-38.5 196Z" fill="#B79972" />
             </svg>
 
-
-
           </div>
 
 
-          <div class="timeline">
+          <div class="timelineblur">
 
             <h3>Updates</h3>
             <label>23 in the last 7 hours</label>
+            <TimeLine />
 
-
-            <div class="box">
-
-              <div class="container">
-
-
-                <div class="lines">
-                  <div class="dot"></div>
-                  <div class="line"></div>
-                  <div class="dot"></div>
-                  <div class="line"></div>
-                  <div class="dot"></div>
-                  <div class="line"></div>
-                </div>
-
-
-                <div class="cards">
-                  <div class="card">
-                    <h4>16:30</h4>
-                    <p>Believing Is The Absence<br></br> Of Doubt</p>
-                  </div>
-
-
-                  <div class="card">
-                    <h4>15:22</h4>
-                    <p>Start With A Baseline</p>
-                  </div>
-                  <div class="card">
-                    <h4>14:15</h4>
-                    <p>Break Through Self Doubt<br></br> And Fear</p>
-                  </div>
-
-
-
-
-
-
-
-
-
-                </div>
-              </div>
-            </div>
           </div>
+
         </div>
 
 
@@ -328,40 +287,42 @@ function App() {
             <button onClick={handleShowNap}>
               Nap
             </button >
-            <Modal show={showNap} onHide={handleCloseNap}>
+            <Container>
+              <Modal show={showNap} onHide={handleCloseNap} animation={false} backdrop="static">
 
-              <Form noValidate onSubmit={handleSaveNap}>
+                <Form noValidate onSubmit={handleSaveNap}>
 
-                <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form.Group controlId="exampleForm.ControlInput1">
-                    <Form.Label>Event Type: <b>Nap</b> </Form.Label>
-                    <br></br>
-                    <Form.Label>Start Time</Form.Label>
-                    <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
-                    <Form.Label>End Time</Form.Label>
-                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp1TimeValue} />
-                    <Form.Label>Notes</Form.Label>
-                    <Form.Control as="textarea" name='notes' rows={3} />
-                  </Form.Group>
-
-
+                  <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Form.Group controlId="exampleForm.ControlInput1">
+                      <Form.Label>Event Type: <b>Nap</b> </Form.Label>
+                      <br></br>
+                      <Form.Label>Start Time</Form.Label>
+                      <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
+                      <Form.Label>End Time</Form.Label>
+                      <Form.Control type="datetime-local" name='end_time' defaultValue={nowp1TimeValue} />
+                      <Form.Label>Notes</Form.Label>
+                      <Form.Control as="textarea" name='notes' rows={3} />
+                    </Form.Group>
 
 
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleCloseNap}>
-                    Close
-                  </Button>
-                  <Button type="submit" variant="primary">
-                    Save Changes
-                  </Button>
 
-                </Modal.Footer>
-              </Form>
-            </Modal>
+
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseNap}>
+                      Close
+                    </Button>
+                    <Button type="submit" variant="primary">
+                      Save Changes
+                    </Button>
+
+                  </Modal.Footer>
+                </Form>
+              </Modal>
+            </Container>
 
           </div>
 
@@ -599,6 +560,174 @@ function App() {
 
   return usrLayout;
 }
+
+
+
+
+function TimeLine(props) {
+  console.log("Timelining");
+  const trackDate = props.tdate;
+  const trackData = props.tdata;
+
+
+
+
+  console.log("Got event track:", trackData);
+  var trDetails = [];
+
+  var trackDataAll = [];
+
+  if (trackData == null) {
+    console.log("No events");
+
+  }
+  else {
+    var a = _.groupBy(trackData, function (n) {
+      return n.create_date;
+    });
+    console.log(a)
+    console.log(typeof (a))
+    _.forEach(a, function (val, key) {
+      console.log("Key", key);
+      console.log(val);
+
+      var details = [];
+
+      // build up the details for this date
+      _.forEach(val, function (value) {
+
+        var est = value['start_time'];
+        var estMils = est['seconds'] * 1000
+        var dtest = new Date(estMils);
+        console.log(dtest);
+        var tdateString = moment(dtest).format('YYYY-MM-DD hh:mm:ss');
+        console.log("elem", tdateString);
+        console.log("elem", typeof (tdateString));
+        console.log(value["type"]);
+        var d = {
+          "name": value["type"],
+          "date": tdateString,
+          "value": 10
+        };
+        details.push(d);
+      });
+      console.log("details");
+      console.log(details);
+
+      var dData = {
+        "date": key,
+        "details": details
+      };
+      trackDataAll.push(dData);
+
+
+    });
+
+
+
+
+
+  }
+
+  // const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
+
+
+  // var trackDataPlot = [{
+  //   "date": "2021-06-30",
+  //   "total": 1,
+  //   "details": trDetails
+
+  // }];
+  // console.log(trackDataPlot);
+  // // console.log(trackDataOld);
+  // console.log(trackDataAll);
+  // var overview = "day";
+
+  var hmShow = (
+    <>
+      <div class="timeline">
+        <div class="timeline-container primary">
+          <div class="timeline-icon">
+            <i class="far fa-grin-wink"></i>
+          </div>
+          <div class="timeline-body">
+            <h4 class="timeline-title"><span class="badge">Primary</span></h4>
+            <p class="timeline-subtitle">1 Hours Ago</p>
+          </div>
+        </div>
+        <div class="timeline-container danger">
+          <div class="timeline-icon">
+            <i class="far fa-grin-hearts"></i>
+          </div>
+          <div class="timeline-body">
+            <h4 class="timeline-title"><span class="badge">Danger</span></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
+            <p class="timeline-subtitle">2 Hours Ago</p>
+          </div>
+        </div>
+        <div class="timeline-container success">
+          <div class="timeline-icon">
+            <i class="far fa-grin-tears"></i>
+          </div>
+          <div class="timeline-body">
+            <h4 class="timeline-title"><span class="badge">Success</span></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
+            <p class="timeline-subtitle">6 Hours Ago</p>
+          </div>
+        </div>
+        <div class="timeline-container warning">
+          <div class="timeline-icon">
+            <i class="far fa-grimace"></i>
+          </div>
+          <div class="timeline-body">
+            <h4 class="timeline-title"><span class="badge">Warning</span></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
+            <p class="timeline-subtitle">1 Day Ago</p>
+          </div>
+        </div>
+        <div class="timeline-container">
+          <div class="timeline-icon">
+            <i class="far fa-grin-beam-sweat"></i>
+          </div>
+          <div class="timeline-body">
+            <h4 class="timeline-title"><span class="badge">Secondary</span></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
+            <p class="timeline-subtitle">3 Days Ago</p>
+          </div>
+        </div>
+        <div class="timeline-container info">
+          <div class="timeline-icon">
+            <i class="far fa-grin"></i>
+          </div>
+          <div class="timeline-body">
+            <h4 class="timeline-title"><span class="badge">Info</span></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam necessitatibus numquam earum ipsa fugiat veniam suscipit, officiis repudiandae, eum recusandae neque dignissimos. Cum fugit laboriosam culpa, repellendus esse commodi deserunt.</p>
+            <p class="timeline-subtitle">4 Days Ago</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
+  // if (trackDataAll.length > 0) {
+  //   hmShow = (<>
+  //     <CalendarHeatmap
+  //       data={trackDataAll}
+  //       overview={overview}
+  //     >
+  //     </CalendarHeatmap>
+  //   </>);
+
+  // }
+  // else {
+  //   hmShow = null;
+
+  // }
+  // useForceUpdate();
+
+  return hmShow;
+}
+
 
 function SignIn() {
 
