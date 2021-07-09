@@ -12,6 +12,9 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
 import Form from "react-bootstrap/Form";
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
+import TabContainer from 'react-bootstrap/TabContainer';
 import Card from "react-bootstrap/Card";
 import ListGroup from 'react-bootstrap/ListGroup'
 import Container from 'react-bootstrap/Container'
@@ -51,7 +54,15 @@ function App() {
 
   const [user] = useAuthState(auth);
   const [nowTimeValue, setNowTimeValue] = useState(null);
+  // user for default nap time
   const [nowp1TimeValue, setNowp1TimeValue] = useState(null);
+  // use for default pee time and water
+  const [nowp1mTimeValue, setNowp1mTimeValue] = useState(null);
+  // use for default poop time and accident and food
+  const [nowp3mTimeValue, setNowp3mTimeValue] = useState(null);
+
+  // Tabs
+  const [key, setKey] = useState('home');
 
   const [showNap, setShowNap] = useState(false);
   const [showFood, setShowFood] = useState(false);
@@ -81,13 +92,32 @@ function App() {
       console.log("Now TP1 time", nowtp1TimeStr);
       setNowp1TimeValue(nowtp1TimeStr);
 
+      // set now + 1 min for default pee and water time interval 
+      var tp1m = new Date();
+      tp1m.setMinutes(tp1m.getMinutes() - tp1m.getTimezoneOffset() + 1);
+      // tp1m.setMinutes(now.getMinutes() + 1);
+      // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
+      let nowtp1mTimeStr = tp1m.toISOString().slice(0, -1);
+      console.log("Now TP1m time", nowtp1mTimeStr);
+      setNowp1mTimeValue(nowtp1mTimeStr);
+
+      // set now + 3 min for default food, accident and poop time interval 
+      const tp3m = new Date();
+      console.log(tp3m);
+      // do we first need to set the timezone offset?
+      // tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset());
+      tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset() + 3);
+      var nowtp3mTimeStr = tp3m.toISOString().slice(0, -1);
+      console.log("Now TP3m time", nowtp3mTimeStr);
+      setNowp3mTimeValue(nowtp3mTimeStr);
+
       // window.addEventListener('load', () => {
       //   const now = new Date();
       //   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
       //   document.getElementsByName('date_of_birth').value = now.toISOString().slice(0, -1);
       // });
     },
-    []
+    [showNap, showFood, showWater, showAccdnt, showPee, showPoop]
   )
 
   const saveEvent = async (evType, evData) => {
@@ -99,10 +129,10 @@ function App() {
     var today = new Date();
 
     var tdateString = moment(today).format('YYYY-MM-DD');
-    console.log(tdateString);
+    // console.log(tdateString);
 
     var stDt = new Date(evData.start_time);
-    console.log(stDt);
+    // console.log(stDt);
     var enDt = new Date(evData.end_time);
 
 
@@ -116,13 +146,10 @@ function App() {
     });
 
   }
-  console.log("User:", user);
+  // console.log("User:", user);
   let usrLayout = null;
 
 
-  const handleClickNap = () => {
-    console.log("Clicked log nap");
-  }
 
   const handleCloseNap = () => setShowNap(false);
   const handleShowNap = () => setShowNap(true);
@@ -141,18 +168,78 @@ function App() {
 
   const handleCloseFood = () => setShowFood(false);
   const handleShowFood = () => setShowFood(true);
+  const handleSaveFood = (e) => {
+    e.preventDefault();
+
+    console.log("Saving food");
+    // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    saveEvent("Food", formDataObj);
+    return false;
+
+  };
 
   const handleCloseWater = () => setShowWater(false);
   const handleShowWater = () => setShowWater(true);
+  const handleSaveWater = (e) => {
+    e.preventDefault();
+
+    console.log("Saving water");
+    // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    saveEvent("Water", formDataObj);
+    return false;
+
+  };
 
   const handleCloseAccdnt = () => setShowAccdnt(false);
   const handleShowAccdnt = () => setShowAccdnt(true);
+  const handleSaveAccdnt = (e) => {
+    e.preventDefault();
+
+    console.log("Saving accdnt");
+    // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    saveEvent("Accident", formDataObj);
+    return false;
+
+  };
 
   const handleClosePoop = () => setShowPoop(false);
   const handleShowPoop = () => setShowPoop(true);
+  const handleSavePoop = (e) => {
+    e.preventDefault();
+
+    console.log("Saving poop");
+    // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    saveEvent("Poop", formDataObj);
+    return false;
+
+  };
 
   const handleClosePee = () => setShowPee(false);
   const handleShowPee = () => setShowPee(true);
+  const handleSavePee = (e) => {
+    e.preventDefault();
+
+    console.log("Saving pee");
+    // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    saveEvent("Pee", formDataObj);
+    return false;
+
+  };
 
 
 
@@ -165,9 +252,76 @@ function App() {
           <SignOut />
         </header>
 
-        <section>
-          <TrackerView />
-        </section>
+        <div class="main">
+
+          <div class="cardTop">
+
+            <svg width="497" height="219" viewBox="0 0 497 219" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M-38.5 196C-38.5 196 34 91 133.5 91C233 91 427 159 532.5 30C638 -99 518 236 518 236L-49 246.5L-38.5 196Z" fill="#B79972" />
+            </svg>
+
+
+
+          </div>
+
+
+          <div class="timeline">
+
+            <h3>Updates</h3>
+            <label>23 in the last 7 hours</label>
+
+
+            <div class="box">
+
+              <div class="container">
+
+
+                <div class="lines">
+                  <div class="dot"></div>
+                  <div class="line"></div>
+                  <div class="dot"></div>
+                  <div class="line"></div>
+                  <div class="dot"></div>
+                  <div class="line"></div>
+                </div>
+
+
+                <div class="cards">
+                  <div class="card">
+                    <h4>16:30</h4>
+                    <p>Believing Is The Absence<br></br> Of Doubt</p>
+                  </div>
+
+
+                  <div class="card">
+                    <h4>15:22</h4>
+                    <p>Start With A Baseline</p>
+                  </div>
+                  <div class="card">
+                    <h4>14:15</h4>
+                    <p>Break Through Self Doubt<br></br> And Fear</p>
+                  </div>
+
+
+
+
+
+
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
 
         <footer>
           <div>
@@ -175,11 +329,13 @@ function App() {
               Nap
             </button >
             <Modal show={showNap} onHide={handleCloseNap}>
-              <Modal.Header closeButton>
-                <Modal.Title>Modal heading</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form onSubmit={handleSaveNap}>
+
+              <Form noValidate onSubmit={handleSaveNap}>
+
+                <Modal.Header closeButton>
+                  <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                   <Form.Group controlId="exampleForm.ControlInput1">
                     <Form.Label>Event Type: <b>Nap</b> </Form.Label>
                     <br></br>
@@ -192,51 +348,233 @@ function App() {
                   </Form.Group>
 
 
+
+
+                </Modal.Body>
+                <Modal.Footer>
                   <Button variant="secondary" onClick={handleCloseNap}>
                     Close
                   </Button>
-
-                  <Button type="submit">
-                    Save
+                  <Button type="submit" variant="primary">
+                    Save Changes
                   </Button>
-                </Form>
 
-
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseNap}>
-                  Close
-                </Button>
-                <Button variant="primary" onClick={handleCloseNap}>
-                  Save Changes
-                </Button>
-
-              </Modal.Footer>
+                </Modal.Footer>
+              </Form>
             </Modal>
 
           </div>
 
-          <button>
-            Food
-          </button>
+          <div>
+            <button onClick={handleShowFood}>
+              Food
+            </button>
+            <Modal show={showFood} onHide={handleCloseFood}>
+
+              <Form noValidate onSubmit={handleSaveFood}>
+
+                <Modal.Header closeButton>
+                  <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput2">
+                    <Form.Label>Event Type: <b>Food</b> </Form.Label>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
+                    <Form.Label>End Time</Form.Label>
+                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp3mTimeValue} />
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} />
+                  </Form.Group>
 
 
-          <button>
-            Water
-          </button>
 
 
-          <button>
-            Accident
-          </button>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseFood}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
 
-          <button>
-            Poop
-          </button>
+                </Modal.Footer>
+              </Form>
+            </Modal>
 
-          <button>
-            Pee
-          </button>
+          </div>
+
+
+          <div>
+            <button onClick={handleShowWater}>
+              Water
+            </button>
+
+            <Modal show={showWater} onHide={handleCloseWater}>
+
+              <Form noValidate onSubmit={handleSaveWater}>
+
+                <Modal.Header closeButton>
+                  <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput3">
+                    <Form.Label>Event Type: <b>Water</b> </Form.Label>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
+                    <Form.Label>End Time</Form.Label>
+                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp1mTimeValue} />
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} />
+                  </Form.Group>
+
+
+
+
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseWater}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
+
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
+          </div>
+
+
+          <div>
+            <button onClick={handleShowAccdnt}>
+              Accident
+            </button>
+            <Modal show={showAccdnt} onHide={handleCloseAccdnt}>
+
+              <Form noValidate onSubmit={handleSaveAccdnt}>
+
+                <Modal.Header closeButton>
+                  <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput4">
+                    <Form.Label>Event Type: <b>Accdnt</b> </Form.Label>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
+                    <Form.Label>End Time</Form.Label>
+                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp3mTimeValue} />
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} />
+                  </Form.Group>
+
+
+
+
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseAccdnt}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
+
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
+          </div>
+
+          <div>
+            <button onClick={handleShowPoop}>
+              Poop
+            </button>
+
+            <Modal show={showPoop} onHide={handleClosePoop}>
+
+              <Form noValidate onSubmit={handleSavePoop}>
+
+                <Modal.Header closeButton>
+                  <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput4">
+                    <Form.Label>Event Type: <b>Poop</b> </Form.Label>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
+                    <Form.Label>End Time</Form.Label>
+                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp3mTimeValue} />
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} />
+                  </Form.Group>
+
+
+
+
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClosePoop}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
+
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
+          </div>
+
+          <div>
+            <button onClick={handleShowPee}>
+              Pee
+            </button>
+
+            <Modal show={showPee} onHide={handleClosePee}>
+
+              <Form noValidate onSubmit={handleSavePee}>
+
+                <Modal.Header closeButton>
+                  <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput4">
+                    <Form.Label>Event Type: <b>Pee</b> </Form.Label>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
+                    <Form.Label>End Time</Form.Label>
+                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp1mTimeValue} />
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} />
+                  </Form.Group>
+
+
+
+
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClosePee}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
+
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
+          </div>
+
         </footer>
 
       </div>
@@ -343,21 +681,6 @@ function TrackerView() {
   var dateArr = getDates(3);
   console.log("Got dates", dateArr);
 
-  // const d0query = dgevents.where('create_date', '==', dateArr[0]);
-  // const [d0events] = useCollectionData(d0query, { idField: 'id' });
-
-  // const d1query = dgevents.where('create_date', '==', dateArr[1]);
-  // const [d1events] = useCollectionData(d1query, { idField: 'id' });
-
-  // const d2query = dgevents.where('create_date', '==', dateArr[2]);
-  // const [d2events] = useCollectionData(d2query, { idField: 'id' });
-
-  // const d3query = dgevents.where('create_date', '==', dateArr[0]);
-  // const [d3events] = useCollectionData(d3query, { idField: 'id' });
-
-  // const d4query = dgevents.where('create_date', '==', dateArr[0]);
-  // const [d4events] = useCollectionData(d4query, { idField: 'id' });
-
   console.log("events:", devents);
   // console.log(d0events);
   // return null;
@@ -410,10 +733,18 @@ function TrackerView() {
 
 }
 
+//create your forceUpdate hook
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue(value => value + 1); // update the state to force render
+}
 
 function EventTrack(props) {
   const trackDate = props.tdate;
   const trackData = props.tdata;
+
+
+
 
   console.log("Got event track:", trackData);
   // console.log(devents);
@@ -511,45 +842,8 @@ function EventTrack(props) {
 
 
 
-    // // got events
-    // for (let index = 0; index < trackData.length; index++) {
-    //   var element = trackData[index];
-    //   console.log("elem", element);
-    //   console.log("elem", element['start_time']);
-    //   // will be in mills
-    //   var est = element['start_time'];
-    //   var estMils = est['seconds'] * 1000
-    //   var dtest = new Date(estMils);
-    //   console.log(dtest);
-    //   var tdateString = moment(dtest).format('YYYY-MM-DD hh:mm:ss');
-    //   console.log("elem", tdateString);
-    //   console.log("elem", typeof (tdateString));
-    //   console.log(element["type"]);
-
-    //   const d = {
-    //     name: element["type"],
-    //     date: tdateString,
-    //     value: 1
-    //   }
-    //   // trDetails.push(d);
-    //   // var d2 = {
-    //   //   "name": "Poo",
-    //   //   "date": "2021-06-30 13:37:00",
-    //   //   "value": 10
-    //   // }
-    //   // trDetails.push(d2);
-
-    //   // var d = {};
-
-    //   // d = {
-    //   //   "name": "Pee",
-    //   //   "date": "2021-06-30 13:37:00",
-    //   //   "value": 10
-    //   // }
-    //   trDetails.push(d);
 
 
-    // }
   }
 
   // const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
@@ -580,7 +874,9 @@ function EventTrack(props) {
   }
   else {
     hmShow = null;
+
   }
+  useForceUpdate();
 
   return hmShow;
 }
