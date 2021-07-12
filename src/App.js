@@ -660,12 +660,13 @@ function App() {
     // non authd users
     usrLayout = (
       <div className="App">
-        <header>🐶💩📜💬
+        <header>🐶💩📜💬!!
+          <SignIn />
         </header>
 
-        <section>
-          <SignIn />
-        </section>
+        <main>
+
+        </main>
 
       </div>
     );
@@ -803,8 +804,7 @@ function TimeLine() {
             </div>
             <div class="timeline-body">
               <div class="propic">
-                <img style={{ scale: 0.5 }} src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
-
+                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
               </div>
               <h4 class="timeline-title"><span class="badge">Nap</span></h4>
               <p>{item.note}</p>
@@ -821,6 +821,9 @@ function TimeLine() {
               <i class="far fa-grin-wink"></i>
             </div>
             <div class="timeline-body">
+              <div class="propic">
+                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+              </div>
               <h4 class="timeline-title"><span class="badge">Food</span></h4>
               <p>{item.note}</p>
               <p class="timeline-subtitle">{subStr}</p>
@@ -836,6 +839,9 @@ function TimeLine() {
               <i class="far fa-grin-wink"></i>
             </div>
             <div class="timeline-body">
+              <div class="propic">
+                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+              </div>
               <h4 class="timeline-title"><span class="badge">Water</span></h4>
               <p>{item.note}</p>
               <p class="timeline-subtitle">{subStr}</p>
@@ -855,6 +861,9 @@ function TimeLine() {
               <i class="far fa-grin-wink"></i>
             </div>
             <div class="timeline-body">
+              <div class="propic">
+                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+              </div>
               <h4 class="timeline-title"><span class="badge">Accident</span></h4>
               <p>{item.note}</p>
               <p class="timeline-subtitle">{subStr}</p>
@@ -870,6 +879,9 @@ function TimeLine() {
               <i class="far fa-grin-wink"></i>
             </div>
             <div class="timeline-body">
+              <div class="propic">
+                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+              </div>
               <h4 class="timeline-title"><span class="badge">Poop</span></h4>
               <p>{item.note}</p>
               <p class="timeline-subtitle">{subStr}</p>
@@ -885,6 +897,9 @@ function TimeLine() {
               <i class="far fa-grin-wink"></i>
             </div>
             <div class="timeline-body">
+              <div class="propic">
+                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+              </div>
               <h4 class="timeline-title"><span class="badge">Pee</span></h4>
               <p>{item.note}</p>
               <p class="timeline-subtitle">{subStr}</p>
@@ -963,7 +978,7 @@ function SignIn() {
 
   return (
     <>
-      <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
+      <button onClick={signInWithGoogle}>Sign in with Google</button>
     </>
   )
 

@@ -212,13 +212,13 @@ img {
 .timelineblur{
   
   width:355px;
-  height:100%;
+  height:100vh;
   background: #ECF1F524;
   mix-blend-mode: normal;
   backdrop-filter: blur(15px);
   overflow:auto;
   position:absolute;
-  top:144px;
+  top:100px;
   margin-left:61px;
   margin-right:71px;
   box-shadow: 0px 20px 53px -30px rgba(95, 102, 173, 0.566816);
@@ -283,9 +283,9 @@ img {
   position: absolute;
   left: 0;
   top: 0;
-  width: 4px;
+  width: 3.5px;
   height: 100%;
-  background: #27293d;
+  background: #2C2217;
 }
 .timeline .timeline-container {
   position: relative;
