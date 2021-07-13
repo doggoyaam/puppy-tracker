@@ -57,13 +57,29 @@ function App() {
   const [nowTimeValue, setNowTimeValue] = useState(null);
   // user for default nap time
   const [nowp1TimeValue, setNowp1TimeValue] = useState(null);
+
   // use for default pee time and water
   const [nowp1mTimeValue, setNowp1mTimeValue] = useState(null);
   // use for default poop time and accident and food
   const [nowp3mTimeValue, setNowp3mTimeValue] = useState(null);
 
+  // set default times for sliders
+  const [napTimeHrsValue, setNapTimeHrsValue] = useState(1);
+  const [napTimeMinsValue, setNapTimeMinsValue] = useState(0);
+
+  const [foodTimeMinsValue, setFoodTimeMinsValue] = useState(5);
+
+  const [waterTimeMinsValue, setWaterTimeMinsValue] = useState(1);
+
+  const [accidentTimeMinsValue, setAccidentTimeMinsValue] = useState(3);
+
+  const [poopTimeMinsValue, setPoopTimeMinsValue] = useState(2);
+
+  const [peeTimeMinsValue, setPeeTimeMinsValue] = useState(1);
+
+
   // Tabs
-  const [key, setKey] = useState('home');
+  const [tab, setTab] = useState('home');
 
   const [showNap, setShowNap] = useState(false);
   const [showFood, setShowFood] = useState(false);
@@ -127,25 +143,69 @@ function App() {
     const { uid, photoURL } = auth.currentUser;
     // const sts = await firebase.firestore.FieldValue.serverTimestamp();
 
-    var today = new Date();
+    // for nap extract hours before duration conv
+    if (evType === "Nap") {
+      var today = new Date();
 
-    var tdateString = moment(today).format('YYYY-MM-DD');
-    // console.log(tdateString);
+      var tdateString = moment(today).format('YYYY-MM-DD');
+      // console.log(tdateString);
 
-    var stDt = new Date(evData.start_time);
-    // console.log(stDt);
-    var enDt = new Date(evData.end_time);
+      var stDt = new Date(evData.start_time);
+      // console.log(stDt);
+      // var enDt = new Date(evData.end_time);
+
+      // calc nap duration in seconds
+      var napHours = parseInt(evData.ev_hours);
+      var napMins = parseInt(evData.ev_mins);
+
+      var durationSec = (napHours * 60 * 60) + (napMins * 60);
+      console.log(napHours, napMins);
+      console.log("duration:", durationSec);
 
 
-    await dgevents.add({
-      type: evType,
-      create_date: tdateString,
-      start_time: stDt,
-      end_time: enDt,
-      note: evData.notes,
-      uid: uid,
-      photoURL: photoURL
-    });
+      await dgevents.add({
+        type: evType,
+        create_date: tdateString,
+        start_time: stDt,
+        duration: durationSec,
+        note: evData.notes,
+        uid: uid,
+        photoURL: photoURL
+      });
+
+
+    } else {
+
+      var today = new Date();
+
+      var tdateString = moment(today).format('YYYY-MM-DD');
+      // console.log(tdateString);
+
+      var stDt = new Date(evData.start_time);
+      // console.log(stDt);
+      // var enDt = new Date(evData.end_time);
+
+      // calc ev duration in seconds
+      var evMins = parseInt(evData.ev_mins);
+
+      var durationSec = evMins * 60;
+      console.log("duration:", durationSec);
+
+
+
+      await dgevents.add({
+        type: evType,
+        create_date: tdateString,
+        start_time: stDt,
+        duration: durationSec,
+        note: evData.notes,
+        uid: uid,
+        photoURL: photoURL
+      });
+
+    }
+
+
 
   }
   // console.log("User:", user);
@@ -180,7 +240,7 @@ function App() {
     // console.log(e);
     const formData = new FormData(e.target),
       formDataObj = Object.fromEntries(formData.entries());
-    // console.log(formDataObj);
+    console.log(formDataObj);
     saveEvent("Nap", formDataObj);
     handleCloseNap();
     return true;
@@ -360,10 +420,61 @@ function App() {
 
   };
 
+  const showSchedule = (e) => {
+    e.preventDefault();
+
+    console.log("Showing schedule");
+    setTab("schedule");
+
+
+  };
+  const showHome = (e) => {
+    e.preventDefault();
+
+    console.log("Showing home");
+    setTab("home");
+
+
+  };
+
+  var activeTabComp = null;
+  var activeTabCompLabel = null;
+
 
 
 
   if (user !== null) {
+    // get the active tab component
+    // home is event view
+    // Schedule is the Schedule heatmap view
+    if (tab === "home") {
+      console.log("Shoing home tab");
+      activeTabComp = (<>
+        <TimeLine />
+      </>
+      );
+
+      // set the label
+      // show the schedule link if at home
+      activeTabCompLabel = (<>
+        <div className="scheduletitle" onClick={showSchedule}>schedule</div>
+
+      </>);
+    }
+    else if (tab === "schedule") {
+      console.log("Shoing schedule tab");
+      activeTabComp = (<>
+        <TrackerView />
+      </>
+      );
+      // set the label
+      // show the home link if at schedule
+      activeTabCompLabel = (<>
+        <div className="scheduletitle" onClick={showHome}>home</div>
+
+      </>);
+
+    }
     // show layout for logged in users
     usrLayout = (
       <div class="App">
@@ -375,6 +486,8 @@ function App() {
 
 
           <div class="cardTop">
+            {activeTabCompLabel}
+
 
             <svg width="497" height="219" viewBox="0 0 497 219" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M-38.5 196C-38.5 196 34 91 133.5 91C233 91 427 159 532.5 30C638 -99 518 236 518 236L-49 246.5L-38.5 196Z" fill="#B79972" />
@@ -384,7 +497,7 @@ function App() {
 
 
           <div>
-            <TimeLine />
+            {activeTabComp}
           </div>
 
         </div>
@@ -406,17 +519,38 @@ function App() {
 
                 <Form noValidate onSubmit={handleSaveNap}>
 
-                  <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
-                  </Modal.Header>
                   <Modal.Body>
                     <Form.Group controlId="exampleForm.ControlInput1">
                       <Form.Label>Event Type: <b>Nap</b> </Form.Label>
                       <br></br>
                       <Form.Label>Start Time</Form.Label>
                       <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
-                      <Form.Label>End Time</Form.Label>
-                      <Form.Control type="datetime-local" name='end_time' defaultValue={nowp1TimeValue} />
+
+
+                      <Form.Label>Duration: <b>{napTimeHrsValue}</b> hours <b>{napTimeMinsValue}</b> minutes</Form.Label>
+                      <br></br>
+
+
+                      <Form.Label>Hours</Form.Label>
+                      <Form.Control
+                        type="range"
+                        name='ev_hours'
+                        min={0}
+                        max={12}
+                        step={1}
+                        defaultValue={napTimeHrsValue}
+                        onChange={changeEvent => setNapTimeHrsValue(changeEvent.target.value)} />
+
+                      <Form.Label>Minutes</Form.Label>
+                      <Form.Control
+                        type="range"
+                        name='ev_mins'
+                        min={0}
+                        max={59}
+                        step={10}
+                        defaultValue={napTimeMinsValue}
+                        onChange={changeEvent => setNapTimeMinsValue(changeEvent.target.value)} />
+
                       <Form.Label>Notes</Form.Label>
                       <Form.Control as="textarea" name='notes' rows={3} />
                     </Form.Group>
@@ -448,17 +582,26 @@ function App() {
 
               <Form noValidate onSubmit={handleSaveFood}>
 
-                <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
-                </Modal.Header>
                 <Modal.Body>
                   <Form.Group controlId="exampleForm.ControlInput2">
                     <Form.Label>Event Type: <b>Food</b> </Form.Label>
                     <br></br>
                     <Form.Label>Start Time</Form.Label>
                     <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
-                    <Form.Label>End Time</Form.Label>
-                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp3mTimeValue} />
+
+                    <Form.Label>Duration: <b>{foodTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={foodTimeMinsValue}
+                      onChange={changeEvent => setFoodTimeMinsValue(changeEvent.target.value)} />
+
                     <Form.Label>Notes</Form.Label>
                     <Form.Control as="textarea" name='notes' rows={3} />
                   </Form.Group>
@@ -491,17 +634,26 @@ function App() {
 
               <Form noValidate onSubmit={handleSaveWater}>
 
-                <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
-                </Modal.Header>
                 <Modal.Body>
                   <Form.Group controlId="exampleForm.ControlInput3">
                     <Form.Label>Event Type: <b>Water</b> </Form.Label>
                     <br></br>
                     <Form.Label>Start Time</Form.Label>
                     <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
-                    <Form.Label>End Time</Form.Label>
-                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp1mTimeValue} />
+
+                    <Form.Label>Duration: <b>{waterTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={waterTimeMinsValue}
+                      onChange={changeEvent => setWaterTimeMinsValue(changeEvent.target.value)} />
+
                     <Form.Label>Notes</Form.Label>
                     <Form.Control as="textarea" name='notes' rows={3} />
                   </Form.Group>
@@ -533,17 +685,26 @@ function App() {
 
               <Form noValidate onSubmit={handleSaveAccdnt}>
 
-                <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
-                </Modal.Header>
                 <Modal.Body>
                   <Form.Group controlId="exampleForm.ControlInput4">
                     <Form.Label>Event Type: <b>Accdnt</b> </Form.Label>
                     <br></br>
                     <Form.Label>Start Time</Form.Label>
                     <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
-                    <Form.Label>End Time</Form.Label>
-                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp3mTimeValue} />
+
+                    <Form.Label>Duration: <b>{accidentTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={accidentTimeMinsValue}
+                      onChange={changeEvent => setAccidentTimeMinsValue(changeEvent.target.value)} />
+
                     <Form.Label>Notes</Form.Label>
                     <Form.Control as="textarea" name='notes' rows={3} />
                   </Form.Group>
@@ -575,17 +736,26 @@ function App() {
 
               <Form noValidate onSubmit={handleSavePoop}>
 
-                <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
-                </Modal.Header>
                 <Modal.Body>
                   <Form.Group controlId="exampleForm.ControlInput5">
                     <Form.Label>Event Type: <b>Poop</b> </Form.Label>
                     <br></br>
                     <Form.Label>Start Time</Form.Label>
                     <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
-                    <Form.Label>End Time</Form.Label>
-                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp3mTimeValue} />
+
+                    <Form.Label>Duration: <b>{poopTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={poopTimeMinsValue}
+                      onChange={changeEvent => setPoopTimeMinsValue(changeEvent.target.value)} />
+
                     <Form.Label>Notes</Form.Label>
                     <Form.Control as="textarea" name='notes' rows={3} />
                   </Form.Group>
@@ -617,17 +787,27 @@ function App() {
 
               <Form noValidate onSubmit={handleSavePee}>
 
-                <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
-                </Modal.Header>
                 <Modal.Body>
                   <Form.Group controlId="exampleForm.ControlInput6">
                     <Form.Label>Event Type: <b>Pee</b> </Form.Label>
                     <br></br>
                     <Form.Label>Start Time</Form.Label>
                     <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
-                    <Form.Label>End Time</Form.Label>
-                    <Form.Control type="datetime-local" name='end_time' defaultValue={nowp1mTimeValue} />
+
+                    <Form.Label>Duration: <b>{peeTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={peeTimeMinsValue}
+                      onChange={changeEvent => setPeeTimeMinsValue(changeEvent.target.value)} />
+
+
                     <Form.Label>Notes</Form.Label>
                     <Form.Control as="textarea" name='notes' rows={3} />
                   </Form.Group>
@@ -690,13 +870,13 @@ function dateDiffs(a, b) {
   // const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
   // const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
   const d = Math.abs(b - a);
-  console.log(d);
+  // console.log(d);
 
   const secs = d / _ms_to_sec;
   const mins = d / _ms_to_min;
   const hours = d / _ms_to_hour;
   const days = Math.floor(d / _MS_PER_DAY);
-  console.log(secs, mins, hours, days);
+  // console.log(secs, mins, hours, days);
 
   const ret = {
     seconds: secs,
@@ -750,6 +930,11 @@ function fmtTimeAgo(dObj) {
 
 }
 
+function handleClickCard(e) {
+  console.log("Clicked card");
+  console.log(e);
+  console.log(e.target.getAttribute("data-key"))
+}
 
 function TimeLine() {
   console.log("Timelining");
@@ -758,12 +943,12 @@ function TimeLine() {
 
   const query = dgevents.orderBy('start_time', 'desc');
   const [devents] = useCollectionData(query, { idField: 'id' });
-  console.log(devents);
+  // console.log(devents);
 
 
 
 
-  console.log("Got event track:", trackData);
+  // console.log("Got event track:", trackData);
   var trDetails = [];
 
   var trackDataAll = [];
@@ -776,20 +961,20 @@ function TimeLine() {
   }
   else {
     var hms = devents.map((item, index) => {
-      console.log(item.type);
+      // console.log(item.type);
 
-      console.log(item.start_time);
+      // console.log(item.start_time);
       var stTime = item.start_time;
 
-      console.log(stTime.toDate());
+      // console.log(stTime.toDate());
       // test it
       const now = new Date();
       const dObj = dateDiffs(stTime.toDate(), now);
-      console.log(dObj);
+      // console.log(dObj);
       const subStr = fmtTimeAgo(dObj);
-      console.log(subStr);
+      // console.log(subStr);
       const messageClass = item.uid === auth.currentUser.uid ? 'sent' : 'received';
-      console.log(item, messageClass);
+      // console.log(item, messageClass);
 
 
 
@@ -802,7 +987,7 @@ function TimeLine() {
 
 
             </div>
-            <div class="timeline-body">
+            <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
               <div class="propic">
                 <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
               </div>

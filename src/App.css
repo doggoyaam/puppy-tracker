@@ -203,6 +203,29 @@ img {
   display:flex;
   overflow:hidden;
   align-items:flex-end;
+  position: relative;
+
+
+  
+  
+}
+
+.cardTop .scheduletitle{
+  /* z-index: 99; */
+  width: 60px;
+  height: 40px;
+  /* text-overflow: clip; */
+  position:absolute;
+  /* top: 100px; */
+  right: 10px;
+  color:#2C2217;
+  font-size: 13px;
+  line-height: 30px;
+
+  
+  /* background: #ffffff; */
+  /* border-radius: 20px; */
+  /* overflow:hidden; */
 
   
   
@@ -213,7 +236,7 @@ img {
   
   width:355px;
   height:100vh;
-  background: #ECF1F524;
+  background: #ffffff24;
   mix-blend-mode: normal;
   backdrop-filter: blur(15px);
   overflow:auto;
