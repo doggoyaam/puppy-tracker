@@ -231,6 +231,28 @@ img {
   
 }
 
+/* schedule view */
+.scheduleblur{
+  
+  width:355px;
+  height:100vh;
+  background: #ffffff24;
+  mix-blend-mode: normal;
+  backdrop-filter: blur(15px);
+  overflow:auto;
+  position:absolute;
+  top:100px;
+  margin-left:61px;
+  margin-right:71px;
+  box-shadow: 0px 20px 53px -30px rgba(95, 102, 173, 0.566816);
+  border-radius: 10px;
+  color:white;
+  
+}
+#calendar-heatmap .label-day {
+  color: white;
+  fill:violet;
+}
 
 .timelineblur{
   

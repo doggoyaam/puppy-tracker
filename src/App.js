@@ -20,7 +20,8 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import CalendarHeatmap from 'reactjs-calendar-heatmap'
+// use custom calanderheatmap component
+import CalendarHeatmap from './calendar-heatmap.component'
 import moment from 'moment';
 import { timeMillisecond } from 'd3';
 
@@ -1239,8 +1240,11 @@ function TrackerView() {
   // console.log(d0events);
   // return null;
 
+
+
   return (<>
-    <main>
+    <div class="scheduleblur">
+
 
       <Row>
         <Col>
@@ -1254,12 +1258,13 @@ function TrackerView() {
           </Container>
         </Col>
       </Row>
+    </div>
 
 
 
 
 
-    </main>
+
 
   </>)
 
@@ -1302,41 +1307,41 @@ function EventTrack(props) {
 
   console.log("Got event track:", trackData);
   // console.log(devents);
-  // var startTrackDt = trackDate + " 00:00:00";
+  var startTrackDt = "2021-06-30 00:00:00";
 
-  // var trDetails = [
-  //   {
-  //     "name": "Nap",
-  //     "date": startTrackDt,
-  //     "value": 0
-  //   },
-  //   {
-  //     "name": "Food",
-  //     "date": startTrackDt,
-  //     "value": 0
-  //   },
-  //   {
-  //     "name": "Water",
-  //     "date": startTrackDt,
-  //     "value": 0
-  //   },
-  //   {
-  //     "name": "Accident",
-  //     "date": startTrackDt,
-  //     "value": 0
-  //   },
-  //   {
-  //     "name": "Poop",
-  //     "date": startTrackDt,
-  //     "value": 0
-  //   },
-  //   {
-  //     "name": "Pee",
-  //     "date": startTrackDt,
-  //     "value": 0
-  //   }
-  // ];
-  var trDetails = [];
+  var trDetails = [
+    {
+      "name": "Nap",
+      "date": startTrackDt,
+      "value": 200
+    },
+    {
+      "name": "Food",
+      "date": startTrackDt,
+      "value": 0
+    },
+    {
+      "name": "Water",
+      "date": startTrackDt,
+      "value": 0
+    },
+    {
+      "name": "Accident",
+      "date": startTrackDt,
+      "value": 0
+    },
+    {
+      "name": "Poop",
+      "date": startTrackDt,
+      "value": 0
+    },
+    {
+      "name": "Pee",
+      "date": startTrackDt,
+      "value": 0
+    }
+  ];
+  // var trDetails = [];
   // init the template data
   // will be same for all traces
 
@@ -1363,6 +1368,7 @@ function EventTrack(props) {
       console.log(val);
 
       var details = [];
+      var total = 0;
 
       // build up the details for this date
       _.forEach(val, function (value) {
@@ -1378,16 +1384,18 @@ function EventTrack(props) {
         var d = {
           "name": value["type"],
           "date": tdateString,
-          "value": 10
+          "value": 3600
         };
         details.push(d);
+        total = total + d.value;
       });
       console.log("details");
       console.log(details);
 
       var dData = {
         "date": key,
-        "details": details
+        "details": details,
+        "total": total
       };
       trackDataAll.push(dData);
 
