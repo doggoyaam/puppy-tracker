@@ -23,7 +23,7 @@ import Row from 'react-bootstrap/Row'
 // use custom calanderheatmap component
 import CalendarHeatmap from './calendar-heatmap.component'
 import moment from 'moment';
-import { timeMillisecond } from 'd3';
+import { interpolateNumber, timeMillisecond } from 'd3';
 
 // process.env.REACT_APP_FIREBASE_AUTH_DOMAIN
 // process.env.REACT_APP_FIREBASE_PROJ_ID
@@ -942,7 +942,7 @@ function TimeLine() {
   const trackData = null;
   const dgevents = firestore.collection('testevents');
 
-  const query = dgevents.orderBy('start_time', 'desc');
+  const query = dgevents.orderBy('start_time', 'desc').limit(50);
   const [devents] = useCollectionData(query, { idField: 'id' });
   // console.log(devents);
 
@@ -983,9 +983,13 @@ function TimeLine() {
       if (item.type === "Nap") {
         return (
           <div class="timeline-container evnap">
+            <div class="date-info-container">
+              <div class="date-info-text">
+                Today
+
+              </div>
+            </div>
             <div class="timeline-icon">
-
-
 
             </div>
             <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
@@ -1227,7 +1231,7 @@ function TrackerView() {
 
   const dgevents = firestore.collection('testevents');
 
-  const query = dgevents.orderBy('create_date');
+  const query = dgevents.orderBy('create_date').limit(25);
   const [devents] = useCollectionData(query, { idField: 'id' });
 
 
@@ -1384,7 +1388,7 @@ function EventTrack(props) {
         var d = {
           "name": value["type"],
           "date": tdateString,
-          "value": 3600
+          "value": value["duration"]
         };
         details.push(d);
         total = total + d.value;

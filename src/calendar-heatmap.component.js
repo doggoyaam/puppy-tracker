@@ -1321,9 +1321,20 @@ class CalendarHeatmap extends React.Component {
       this.selected = this.props.data[this.props.data.length - 1]
     }
 
-    let project_labels = this.selected.summary.map(project => {
-      return project.name
-    })
+    // Override project labels to std set of pet events
+
+    // let project_labels = this.selected.summary.map(project => {
+    //   return project.name
+    // })
+
+    let project_labels = [
+      "Nap",
+      "Food",
+      "Water",
+      "Accident",
+      "Poop",
+      "Pee"
+    ];
     let projectScale = d3.scaleBand()
       .rangeRound([this.settings.label_padding, this.settings.height])
       .domain(project_labels)
@@ -1351,8 +1362,30 @@ class CalendarHeatmap extends React.Component {
       .attr('height', () => {
         return Math.min(projectScale.bandwidth(), this.settings.max_block_height)
       })
-      .attr('fill', () => {
-        return this.props.color
+      .attr('fill', (d) => {
+        console.log(d);
+        if (d.name == null) {
+          console.log("undefined name");
+        } else {
+          if (d.name === "Nap") {
+            return "#70587c";
+          } else if (d.name === "Food") {
+            return "#3a7d44";
+          } else if (d.name === "Water") {
+            return "#62bb";
+          } else if (d.name === "Accident") {
+            return "#e40066";
+          } else if (d.name === "Poop") {
+            return "#2C2217";
+          } else if (d.name === "Pee") {
+            return "#B69873";
+          } else {
+
+            return this.props.color
+
+          }
+        }
+
       })
       .style('opacity', 0)
       .on('mouseover', d => {
@@ -1415,7 +1448,6 @@ class CalendarHeatmap extends React.Component {
       })
 
     // Add time labels
-    // This controls the time labels in the day view
     let timeLabels = d3.timeHours(
       moment(this.selected.date).startOf('day'),
       moment(this.selected.date).endOf('day')
@@ -1430,7 +1462,7 @@ class CalendarHeatmap extends React.Component {
       .append('text')
       .attr('class', 'label label-time')
       .style('cursor', 'pointer')
-      .style('fill', 'rgb(170, 0, 170)')
+      .style('fill', 'rgb(0, 0, 0)')
       .attr('font-size', () => {
         return Math.floor(this.settings.label_padding / 3) + 'px'
       })
@@ -1474,7 +1506,7 @@ class CalendarHeatmap extends React.Component {
       .append('text')
       .attr('class', 'label label-project')
       .style('cursor', 'pointer')
-      .style('fill', 'rgb(170, 170, 170)')
+      .style('fill', 'rgb(0, 0, 0)')
       .attr('x', this.settings.gutter)
       .attr('y', d => {
         return projectScale(d) + projectScale.bandwidth() / 2
