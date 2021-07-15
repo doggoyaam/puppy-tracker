@@ -23,7 +23,8 @@ import Row from 'react-bootstrap/Row'
 // use custom calanderheatmap component
 import CalendarHeatmap from './calendar-heatmap.component'
 import moment from 'moment';
-import { interpolateNumber, timeMillisecond } from 'd3';
+// import { interpolateNumber, timeMillisecond } from 'd3';
+import styled from 'styled-components'
 
 // process.env.REACT_APP_FIREBASE_AUTH_DOMAIN
 // process.env.REACT_APP_FIREBASE_PROJ_ID
@@ -915,9 +916,13 @@ function fmtTimeAgo(dObj) {
   }
   else if (dObj.days <= 1) {
     var hrs = Math.floor(dObj.hours);
-    var minsAll = Math.floor(dObj.minutes);
-    var minsLeft = minsAll - hrs * 60;
-    s = `${hrs} hours ${minsLeft} minutes ago`;
+    // var minsAll = Math.floor(dObj.minutes);
+    // var minsLeft = minsAll - hrs * 60;
+    // s = `${hrs} hours ${minsLeft} minutes ago`;
+
+    // just do hours ago 
+    s = `${hrs} hours ago`;
+
 
   }
   else if (dObj.days > 1) {
@@ -942,7 +947,7 @@ function TimeLine() {
   const trackData = null;
   const dgevents = firestore.collection('testevents');
 
-  const query = dgevents.orderBy('start_time', 'desc').limit(50);
+  const query = dgevents.orderBy('start_time', 'desc').limit(10);
   const [devents] = useCollectionData(query, { idField: 'id' });
   // console.log(devents);
 
@@ -956,162 +961,202 @@ function TimeLine() {
 
   var lastAccident = null;
 
-  if (devents == null) {
-    console.log("No events");
 
-  }
-  else {
-    var hms = devents.map((item, index) => {
-      // console.log(item.type);
-
-      // console.log(item.start_time);
-      var stTime = item.start_time;
-
-      // console.log(stTime.toDate());
-      // test it
-      const now = new Date();
-      const dObj = dateDiffs(stTime.toDate(), now);
-      // console.log(dObj);
-      const subStr = fmtTimeAgo(dObj);
-      // console.log(subStr);
-      const messageClass = item.uid === auth.currentUser.uid ? 'sent' : 'received';
-      // console.log(item, messageClass);
+  // group items by start date
+  // so we can label the dates and stuff
+  var hmShow3Arr = [];
 
 
+  // group items by date name and then get the name for each month
+  const dateGroupEvents = _.chain(devents)
+    .groupBy(item => moment(item.start_time.toDate()).format('YYYY-MM-DD'))
+    .value();
 
+  console.log(dateGroupEvents);
+  // will get back obj where each key , val = groupdate, groupDataArr
+  // mabe sort by date in desc explicitly
 
-      if (item.type === "Nap") {
-        return (
-          <div class="timeline-container evnap">
-            <div class="date-info-container">
-              <div class="date-info-text">
-                Today
+  for (var key in dateGroupEvents) {
+    if (dateGroupEvents.hasOwnProperty(key)) {
+      console.log(key);
+      var dateEvents = dateGroupEvents[key];
+
+      var hms2 = dateEvents.map((item, index) => {
+        var stTime = item.start_time;
+
+        // console.log(stTime.toDate());
+        // test it
+        const now = new Date();
+        const dObj = dateDiffs(stTime.toDate(), now);
+        // get time to display
+        const clockEvTime = moment(stTime.toDate()).format('H:mm a')
+        // console.log(dObj);
+        const subStr = fmtTimeAgo(dObj);
+        // console.log(subStr);
+        const messageClass = item.uid === auth.currentUser.uid ? 'sent' : 'received';
+        // console.log(item, messageClass);
+
+        const TimeAgoBlock = styled.div`
+            &:before {
+                display: block;
+                position: absolute;
+                background: inherit;
+                height: 10px;
+                right: 5px;
+                font-weight: 300;
+                font-size: 11px;
+                bottom:5px;
+                content: '(${subStr})'
+            }
+        `;
+
+        if (item.type === "Nap") {
+          return (
+            <div class="timeline-container evnap">
+              <div class="timeline-icon">
 
               </div>
-            </div>
-            <div class="timeline-icon">
+              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
+                <div class="propic">
+                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                </div>
+                <h4 class="timeline-title"><span class="badge">Nap</span></h4>
+                <p>{item.note}</p>
 
-            </div>
-            <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
-              <div class="propic">
-                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
+
               </div>
-              <h4 class="timeline-title"><span class="badge">Nap</span></h4>
-              <p>{item.note}</p>
-              <p class="timeline-subtitle">{subStr}</p>
-            </div>
-          </div>
-        )
+            </div >
+          )
 
-      }
-      else if (item.type === "Food") {
-        return (
-          <div class="timeline-container evfood">
-            <div class="timeline-icon">
-              <i class="far fa-grin-wink"></i>
-            </div>
-            <div class="timeline-body">
-              <div class="propic">
-                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
-              </div>
-              <h4 class="timeline-title"><span class="badge">Food</span></h4>
-              <p>{item.note}</p>
-              <p class="timeline-subtitle">{subStr}</p>
-            </div>
-          </div>
-        )
-      }
-
-      else if (item.type === "Water") {
-        return (
-          <div class="timeline-container evwater">
-            <div class="timeline-icon">
-              <i class="far fa-grin-wink"></i>
-            </div>
-            <div class="timeline-body">
-              <div class="propic">
-                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
-              </div>
-              <h4 class="timeline-title"><span class="badge">Water</span></h4>
-              <p>{item.note}</p>
-              <p class="timeline-subtitle">{subStr}</p>
-            </div>
-          </div>
-        )
-      }
-
-      else if (item.type === "Accident") {
-        // return the last accident date if not already found
-        if (lastAccident === null) {
-          lastAccident = dObj;
         }
-        return (
-          <div class="timeline-container evaccident">
-            <div class="timeline-icon">
-              <i class="far fa-grin-wink"></i>
-            </div>
-            <div class="timeline-body">
-              <div class="propic">
-                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+        else if (item.type === "Food") {
+          return (
+            <div class="timeline-container evfood">
+              <div class="timeline-icon">
+                <i class="far fa-grin-wink"></i>
               </div>
-              <h4 class="timeline-title"><span class="badge">Accident</span></h4>
-              <p>{item.note}</p>
-              <p class="timeline-subtitle">{subStr}</p>
-            </div>
-          </div>
-        )
-      }
-
-      else if (item.type === "Poop") {
-        return (
-          <div class="timeline-container evpoop">
-            <div class="timeline-icon">
-              <i class="far fa-grin-wink"></i>
-            </div>
-            <div class="timeline-body">
-              <div class="propic">
-                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+              <div class="timeline-body">
+                <div class="propic">
+                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                </div>
+                <h4 class="timeline-title"><span class="badge">Food</span></h4>
+                <p>{item.note}</p>
+                <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
               </div>
-              <h4 class="timeline-title"><span class="badge">Poop</span></h4>
-              <p>{item.note}</p>
-              <p class="timeline-subtitle">{subStr}</p>
             </div>
-          </div>
-        )
-      }
+          )
+        }
 
-      else if (item.type === "Pee") {
-        return (
-          <div class="timeline-container evpee">
-            <div class="timeline-icon">
-              <i class="far fa-grin-wink"></i>
-            </div>
-            <div class="timeline-body">
-              <div class="propic">
-                <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+        else if (item.type === "Water") {
+          return (
+            <div class="timeline-container evwater">
+              <div class="timeline-icon">
+                <i class="far fa-grin-wink"></i>
               </div>
-              <h4 class="timeline-title"><span class="badge">Pee</span></h4>
-              <p>{item.note}</p>
-              <p class="timeline-subtitle">{subStr}</p>
+              <div class="timeline-body">
+                <div class="propic">
+                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                </div>
+                <h4 class="timeline-title"><span class="badge">Water</span></h4>
+                <p>{item.note}</p>
+
+                <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
+
+              </div>
             </div>
+          )
+        }
+
+        else if (item.type === "Accident") {
+          return (
+            <div class="timeline-container evaccident">
+              <div class="timeline-icon">
+                <i class="far fa-grin-wink"></i>
+              </div>
+              <div class="timeline-body">
+                <div class="propic">
+                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                </div>
+                <h4 class="timeline-title"><span class="badge">Accident</span></h4>
+                <p>{item.note}</p>
+
+                <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
+
+              </div>
+            </div>
+          )
+        }
+
+        else if (item.type === "Poop") {
+          return (
+            <div class="timeline-container evpoop">
+              <div class="timeline-icon">
+                <i class="far fa-grin-wink"></i>
+              </div>
+              <div class="timeline-body">
+                <div class="propic">
+                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                </div>
+                <h4 class="timeline-title"><span class="badge">Poop</span></h4>
+                <p>{item.note}</p>
+
+                <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
+              </div>
+            </div>
+          )
+        }
+
+        else if (item.type === "Pee") {
+          return (
+            <div class="timeline-container evpee">
+              <div class="timeline-icon">
+                <i class="far fa-grin-wink"></i>
+              </div>
+              <div class="timeline-body">
+                <div class="propic">
+                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                </div>
+                <h4 class="timeline-title"><span class="badge">Pee</span></h4>
+                <p>{item.note}</p>
+
+                <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
+
+              </div>
+            </div>
+          )
+        }
+        else {
+          return null;
+        }
+      });
+
+      var dateDiv = (
+        <div>
+          <div class="date-info-text">
+            {key}
           </div>
-        )
-      }
-      else {
-        return null;
-      }
-
-
-
-    });
-
-
-
-
-
-
+          <div>
+            {hms2}
+          </div>
+        </div>
+      );
+      hmShow3Arr.push(dateDiv);
+    }
 
   }
+
+  // create the actual comp to be rendered
+  var hmShow3Comp = hmShow3Arr.map((item, index) => {
+    return (<>
+      <div key={index}>
+        {item}
+      </div>
+    </>)
+  });
+
+
+
 
   var numDaysSinceLastAcc = null;
 
@@ -1126,27 +1171,15 @@ function TimeLine() {
   // const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
 
 
-  // var trackDataPlot = [{
-  //   "date": "2021-06-30",
-  //   "total": 1,
-  //   "details": trDetails
-
-  // }];
-  // console.log(trackDataPlot);
-  // // console.log(trackDataOld);
-  // console.log(trackDataAll);
-  // var overview = "day";
-
 
 
   var hmShow2 = (<>
     <div class="timelineblur">
 
       <h3>Updates</h3>
-      <label>{numDaysSinceLastAcc} days since last accident</label>
 
       <div class="timeline">
-        {hms}
+        {hmShow3Comp}
       </div>
 
     </div>

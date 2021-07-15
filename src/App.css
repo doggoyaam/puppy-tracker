@@ -347,16 +347,24 @@ img {
   /* color:#0b93f6; */
   /* background: #181717; */
 }
-.timeline .timeline-container .date-info-text {
+.timeline .date-info-text {
   position: sticky;
-  top:-25px;
+  position: -webkit-sticky;
+  top:25px;
   left: -25px;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  font-size: 2rem;
-  color:#0b93f6;
+  width: 280px;
+  height: 30px;
+  /* bottom: 10px; */
+  text-align: start;
+  font-size: 16px;
+  font-weight: 500;
+  color:#2c2217d2;
+  /* margin: 0 10px 0 30px; */
+  z-index: 99;
+  
   /* background: #181717; */
+  box-shadow: 0px 20px 53px -30px rgba(95, 102, 173, 0.966816);
+
 }
 
 .timeline .timeline-container .propic {
@@ -431,11 +439,38 @@ img {
   font-size: 12px;
   font-weight: bold;
 }
+.timeline .timeline-container .timeline-body .timeline-footer {
+  /* position: relative; */
+  display: flex;
+  /* flex-direction: row-reverse; */
+  /* align-items: center; */
+  /* text-align: right; */
+  /* width: 30px; */
+  align-items: flex-end;
+  justify-content: center;
+}
 .timeline .timeline-container .timeline-body .timeline-subtitle {
-  font-weight: 300;
+  font-weight: 500;
   font-style: italic;
   opacity: 0.4;
   font-size: 11px;
+  /* background: black; */
+  color: #000000;
+  /* text-align: center; */
+}
+
+
+.timeline .timeline-container .timeline-body .timeline-subtitle-sub {
+  font-weight: 500;
+  font-style: italic;
+  opacity: 0.4;
+  font-size: 11px;
+  /* float:right; */
+  background: black;
+  /* text-align: right; */
+  
+
+
 }
 .timeline .timeline-container.evnap .badge,
 .timeline .timeline-container.evnap .timeline-icon {
