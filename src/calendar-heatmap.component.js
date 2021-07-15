@@ -1551,7 +1551,8 @@ class CalendarHeatmap extends React.Component {
       })
 
     // Add button to switch back to previous overview
-    this.drawButton()
+    // dont draw button
+    // this.drawButton()
   }
 
 

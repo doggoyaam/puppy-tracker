@@ -12,11 +12,6 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
 import Form from "react-bootstrap/Form";
-import Tabs from 'react-bootstrap/Tabs';
-import Tab from 'react-bootstrap/Tab';
-import TabContainer from 'react-bootstrap/TabContainer';
-import Card from "react-bootstrap/Card";
-import ListGroup from 'react-bootstrap/ListGroup'
 import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
@@ -53,18 +48,10 @@ var _ = require('lodash');
 
 
 function App() {
-  const dummy = useRef();
+  // const dummy = useRef();
 
   const [user] = useAuthState(auth);
   const [nowTimeValue, setNowTimeValue] = useState(null);
-  // user for default nap time
-  const [nowp1TimeValue, setNowp1TimeValue] = useState(null);
-
-  // use for default pee time and water
-  const [nowp1mTimeValue, setNowp1mTimeValue] = useState(null);
-  // use for default poop time and accident and food
-  const [nowp3mTimeValue, setNowp3mTimeValue] = useState(null);
-
   // set default times for sliders
   const [napTimeHrsValue, setNapTimeHrsValue] = useState(1);
   const [napTimeMinsValue, setNapTimeMinsValue] = useState(0);
@@ -90,54 +77,51 @@ function App() {
   const [showPoop, setShowPoop] = useState(false);
   const [showPee, setShowPee] = useState(false);
 
+
+  const [showAbout, setShowAbout] = useState(false);
+
+
+
+
   const dgevents = firestore.collection('testevents');
 
 
   // add current date time to window
   useEffect(
     () => {
-      console.log("Using effect");
+      // console.log("Using effect");
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      let nowTimeStr = now.toISOString().slice(0, -1);
-      console.log("Now time", nowTimeStr);
+      let nowTimeStr = now.toISOString().slice(0, 16);
+      // console.log("Now time", nowTimeStr);
       setNowTimeValue(nowTimeStr);
-
-      // set now + 1 hour for default nap time interval 
-      var tp1 = new Date();
-      tp1.setHours(now.getHours() + 1);
-      // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
-      let nowtp1TimeStr = tp1.toISOString().slice(0, -1);
-      console.log("Now TP1 time", nowtp1TimeStr);
-      setNowp1TimeValue(nowtp1TimeStr);
-
-      // set now + 1 min for default pee and water time interval 
-      var tp1m = new Date();
-      tp1m.setMinutes(tp1m.getMinutes() - tp1m.getTimezoneOffset() + 1);
-      // tp1m.setMinutes(now.getMinutes() + 1);
-      // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
-      let nowtp1mTimeStr = tp1m.toISOString().slice(0, -1);
-      console.log("Now TP1m time", nowtp1mTimeStr);
-      setNowp1mTimeValue(nowtp1mTimeStr);
-
-      // set now + 3 min for default food, accident and poop time interval 
-      const tp3m = new Date();
-      console.log(tp3m);
-      // do we first need to set the timezone offset?
-      // tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset());
-      tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset() + 3);
-      var nowtp3mTimeStr = tp3m.toISOString().slice(0, -1);
-      console.log("Now TP3m time", nowtp3mTimeStr);
-      setNowp3mTimeValue(nowtp3mTimeStr);
-
-      // window.addEventListener('load', () => {
-      //   const now = new Date();
-      //   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      //   document.getElementsByName('date_of_birth').value = now.toISOString().slice(0, -1);
-      // });
     },
     [showNap, showFood, showWater, showAccdnt, showPee, showPoop]
   )
+
+  const handleCloseNap = () => setShowNap(false);
+  const handleCloseFood = () => setShowFood(false);
+  const handleClosePoop = () => setShowPoop(false);
+  const handleClosePee = () => setShowPee(false);
+  const handleCloseAccdnt = () => setShowAccdnt(false);
+  const handleCloseWater = () => setShowWater(false);
+
+  const showSchedule = (e) => {
+    e.preventDefault();
+
+    console.log("Showing schedule");
+    setTab("schedule");
+
+
+  };
+  const showHome = (e) => {
+    e.preventDefault();
+
+    console.log("Showing home");
+    setTab("home");
+
+
+  };
 
   const saveEvent = async (evType, evData) => {
     console.log("Save event", evType, evData);
@@ -215,23 +199,18 @@ function App() {
 
 
 
-  const handleCloseNap = () => setShowNap(false);
+
+
   const handleShowNap = () => {
     // set the time appropriately
     console.log("Using effect show nap ndate");
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    let nowTimeStr = now.toISOString().slice(0, -1);
+    // only get to minutes
+    let nowTimeStr = now.toISOString().slice(0, 16);
     console.log("Now time", nowTimeStr);
     setNowTimeValue(nowTimeStr);
 
-    // set now + 1 hour for default nap time interval 
-    var tp1 = new Date();
-    tp1.setHours(now.getHours() + 1);
-    // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
-    let nowtp1TimeStr = tp1.toISOString().slice(0, -1);
-    console.log("Now TP1 time", nowtp1TimeStr);
-    setNowp1TimeValue(nowtp1TimeStr);
 
     setShowNap(true);
   }
@@ -249,24 +228,15 @@ function App() {
 
   };
 
-  const handleCloseFood = () => setShowFood(false);
+
   const handleShowFood = () => {
     // also gotta update current time
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    let nowTimeStr = now.toISOString().slice(0, -1);
+    let nowTimeStr = now.toISOString().slice(0, 16);
     // console.log("Now time", nowTimeStr);
     setNowTimeValue(nowTimeStr);
 
-    // set now + 3 min for default food, accident and poop time interval 
-    const tp3m = new Date();
-    // console.log(tp3m);
-    // do we first need to set the timezone offset?
-    // tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset());
-    tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset() + 3);
-    var nowtp3mTimeStr = tp3m.toISOString().slice(0, -1);
-    // console.log("Now TP3m time", nowtp3mTimeStr);
-    setNowp3mTimeValue(nowtp3mTimeStr);
 
     setShowFood(true);
 
@@ -285,24 +255,15 @@ function App() {
 
   };
 
-  const handleCloseWater = () => setShowWater(false);
   const handleShowWater = () => {
 
     // also gotta update current time
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    let nowTimeStr = now.toISOString().slice(0, -1);
+    let nowTimeStr = now.toISOString().slice(0, 16);
     // console.log("Now time", nowTimeStr);
     setNowTimeValue(nowTimeStr);
 
-    // set now + 1 min for default pee and water time interval 
-    var tp1m = new Date();
-    tp1m.setMinutes(tp1m.getMinutes() - tp1m.getTimezoneOffset() + 1);
-    // tp1m.setMinutes(now.getMinutes() + 1);
-    // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
-    let nowtp1mTimeStr = tp1m.toISOString().slice(0, -1);
-    // console.log("Now TP1m time", nowtp1mTimeStr);
-    setNowp1mTimeValue(nowtp1mTimeStr);
     setShowWater(true);
   }
   const handleSaveWater = (e) => {
@@ -319,25 +280,15 @@ function App() {
 
   };
 
-  const handleCloseAccdnt = () => setShowAccdnt(false);
   const handleShowAccdnt = () => {
     // also gotta update current time
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    let nowTimeStr = now.toISOString().slice(0, -1);
+    let nowTimeStr = now.toISOString().slice(0, 16);
     // console.log("Now time", nowTimeStr);
     setNowTimeValue(nowTimeStr);
 
 
-    // set now + 3 min for default food, accident and poop time interval 
-    const tp3m = new Date();
-    // console.log(tp3m);
-    // do we first need to set the timezone offset?
-    // tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset());
-    tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset() + 3);
-    var nowtp3mTimeStr = tp3m.toISOString().slice(0, -1);
-    // console.log("Now TP3m time", nowtp3mTimeStr);
-    setNowp3mTimeValue(nowtp3mTimeStr);
     setShowAccdnt(true);
   }
   const handleSaveAccdnt = (e) => {
@@ -354,25 +305,19 @@ function App() {
 
   };
 
-  const handleClosePoop = () => setShowPoop(false);
+
+
+
+
   const handleShowPoop = () => {
     // also gotta update current time
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    let nowTimeStr = now.toISOString().slice(0, -1);
+    let nowTimeStr = now.toISOString().slice(0, 16);
     // console.log("Now time", nowTimeStr);
     setNowTimeValue(nowTimeStr);
 
 
-    // set now + 3 min for default food, accident and poop time interval 
-    const tp3m = new Date();
-    // console.log(tp3m);
-    // do we first need to set the timezone offset?
-    // tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset());
-    tp3m.setMinutes(tp3m.getMinutes() - tp3m.getTimezoneOffset() + 3);
-    var nowtp3mTimeStr = tp3m.toISOString().slice(0, -1);
-    // console.log("Now TP3m time", nowtp3mTimeStr);
-    setNowp3mTimeValue(nowtp3mTimeStr);
     setShowPoop(true);
   }
   const handleSavePoop = (e) => {
@@ -389,23 +334,14 @@ function App() {
 
   };
 
-  const handleClosePee = () => setShowPee(false);
   const handleShowPee = () => {
     // also gotta update current time
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    let nowTimeStr = now.toISOString().slice(0, -1);
+    let nowTimeStr = now.toISOString().slice(0, 16);
     // console.log("Now time", nowTimeStr);
     setNowTimeValue(nowTimeStr);
 
-    // set now + 1 min for default pee and water time interval 
-    var tp1m = new Date();
-    tp1m.setMinutes(tp1m.getMinutes() - tp1m.getTimezoneOffset() + 1);
-    // tp1m.setMinutes(now.getMinutes() + 1);
-    // tp1.setMinutes(tp1.getMinutes() - tp1.getTimezoneOffset());
-    let nowtp1mTimeStr = tp1m.toISOString().slice(0, -1);
-    // console.log("Now TP1m time", nowtp1mTimeStr);
-    setNowp1mTimeValue(nowtp1mTimeStr);
     setShowPee(true);
   }
   const handleSavePee = (e) => {
@@ -422,22 +358,21 @@ function App() {
 
   };
 
-  const showSchedule = (e) => {
+
+  const showAboutMsg = (e) => {
     e.preventDefault();
+    const cHeadState = showAbout;
+    console.log("Currently showing about:", cHeadState);
+    if (cHeadState === false) {
+      setShowAbout(true);
+    }
+    else {
+      setShowAbout(false);
+    }
 
-    console.log("Showing schedule");
-    setTab("schedule");
+  }
 
 
-  };
-  const showHome = (e) => {
-    e.preventDefault();
-
-    console.log("Showing home");
-    setTab("home");
-
-
-  };
 
   var activeTabComp = null;
   var activeTabCompLabel = null;
@@ -477,10 +412,25 @@ function App() {
       </>);
 
     }
+
+    var headComp = null;
+    if (showAbout === false) {
+      headComp = (<>
+        🐶💩📜💬
+      </>);
+    } else {
+      headComp = (<>
+        doggoyaam - made with ❤️ for m&m
+      </>);
+
+    }
     // show layout for logged in users
     usrLayout = (
       <div class="App">
-        <header>🐶💩📜💬
+        <header>
+          <div onClick={showAboutMsg}>
+            {headComp}
+          </div>
           <SignOut />
         </header>
 
@@ -513,7 +463,7 @@ function App() {
 
         <footer>
           <div>
-            <button onClick={handleShowNap}>
+            <button class="button-nap" onClick={handleShowNap}>
               Nap
             </button >
             <Container>
@@ -577,7 +527,7 @@ function App() {
           </div>
 
           <div>
-            <button onClick={handleShowFood}>
+            <button class="button-food" onClick={handleShowFood}>
               Food
             </button>
             <Modal show={showFood} onHide={handleCloseFood}>
@@ -628,7 +578,7 @@ function App() {
 
 
           <div>
-            <button onClick={handleShowWater}>
+            <button class="button-water" onClick={handleShowWater}>
               Water
             </button>
 
@@ -680,7 +630,7 @@ function App() {
 
 
           <div>
-            <button onClick={handleShowAccdnt}>
+            <button class="button-acc" onClick={handleShowAccdnt}>
               Accident
             </button>
             <Modal show={showAccdnt} onHide={handleCloseAccdnt}>
@@ -730,7 +680,7 @@ function App() {
           </div>
 
           <div>
-            <button onClick={handleShowPoop}>
+            <button class="button-poop" onClick={handleShowPoop}>
               Poop
             </button>
 
@@ -781,7 +731,7 @@ function App() {
           </div>
 
           <div>
-            <button onClick={handleShowPee}>
+            <button class="button-pee" onClick={handleShowPee}>
               Pee
             </button>
 
@@ -947,7 +897,7 @@ function TimeLine() {
   const trackData = null;
   const dgevents = firestore.collection('testevents');
 
-  const query = dgevents.orderBy('start_time', 'desc').limit(10);
+  const query = dgevents.orderBy('start_time', 'desc').limit(20);
   const [devents] = useCollectionData(query, { idField: 'id' });
   // console.log(devents);
 
@@ -969,7 +919,8 @@ function TimeLine() {
 
   // group items by date name and then get the name for each month
   const dateGroupEvents = _.chain(devents)
-    .groupBy(item => moment(item.start_time.toDate()).format('YYYY-MM-DD'))
+    // .groupBy(item => moment(item.start_time.toDate()).format('YYYY-MM-DD'))
+    .groupBy(item => moment(item.start_time.toDate()).format('D MMMM YYYY'))
     .value();
 
   console.log(dateGroupEvents);
@@ -989,7 +940,7 @@ function TimeLine() {
         const now = new Date();
         const dObj = dateDiffs(stTime.toDate(), now);
         // get time to display
-        const clockEvTime = moment(stTime.toDate()).format('H:mm a')
+        const clockEvTime = moment(stTime.toDate()).format('HH:mm a')
         // console.log(dObj);
         const subStr = fmtTimeAgo(dObj);
         // console.log(subStr);
@@ -1211,7 +1162,7 @@ function SignOut() {
   console.log(auth.user);
   if (auth.user) {
     return (
-      <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
+      <button onClick={() => auth.signOut()}>Sign Out</button>
     )
 
   }
@@ -1259,12 +1210,33 @@ function getDates(numDaysBack) {
 function TrackerView() {
   // const dummy = useRef();
 
+  const [nowDateValue, setNowDateValue] = useState(null);
+
+
 
 
 
   const dgevents = firestore.collection('testevents');
 
-  const query = dgevents.orderBy('create_date').limit(25);
+  // var start = moment().startOf('day'); // set to 12:00 am today
+  // var end = moment().endOf('day'); // set to 23:59 pm today
+
+  var start = new Date(nowDateValue);
+  start.setHours(0, 0, 0, 0);
+
+  var end = new Date();
+  end.setHours(23, 59, 59, 999);
+  if (nowDateValue == null) {
+    console.log("Empty nowday")
+  }
+  else {
+
+  }
+
+  const query = dgevents.where('start_time', ">=", start)
+    .where('start_time', "<", end)
+    .orderBy('start_time', 'desc')
+    .limit(25);
   const [devents] = useCollectionData(query, { idField: 'id' });
 
 
@@ -1278,19 +1250,45 @@ function TrackerView() {
   // return null;
 
 
+  // add current date time to window
+  useEffect(
+    () => {
+      console.log("Using effec TimeLine");
+      const now = new Date();
+      // now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      // let nowTimeStr = now.toISOString().slice(0, -1);
+      // console.log("Now time", nowTimeStr);
+      var ndateString = moment(now).format('YYYY-MM-DD');
+      console.log("Now time styr", ndateString);
+
+      setNowDateValue(ndateString);
+
+    },
+    []
+  )
+
+
 
   return (<>
     <div class="scheduleblur">
 
+      <h3>Schedule</h3>
 
       <Row>
         <Col>
-          <p>{dateArr[0]}</p>
+          <Form.Group controlId="exampleForm.ControlInputSch1" as={Row} className="mb-3">
+            <Form.Label column sm={4}> Select Date</Form.Label>
+            <Col sm={6}>
+
+              <Form.Control type="date" name='start_date' defaultValue={nowDateValue} onChange={changeEvent => setNowDateValue(changeEvent.target.value)} />
+            </Col>
+          </Form.Group>
+
         </Col>
         <Col>
           <Container fluid>
 
-            <p>test</p>
+            <p>{nowDateValue}</p>
             <EventTrack tdate={dateArr[0]} tdata={devents} />
           </Container>
         </Col>
@@ -1344,40 +1342,7 @@ function EventTrack(props) {
 
   console.log("Got event track:", trackData);
   // console.log(devents);
-  var startTrackDt = "2021-06-30 00:00:00";
 
-  var trDetails = [
-    {
-      "name": "Nap",
-      "date": startTrackDt,
-      "value": 200
-    },
-    {
-      "name": "Food",
-      "date": startTrackDt,
-      "value": 0
-    },
-    {
-      "name": "Water",
-      "date": startTrackDt,
-      "value": 0
-    },
-    {
-      "name": "Accident",
-      "date": startTrackDt,
-      "value": 0
-    },
-    {
-      "name": "Poop",
-      "date": startTrackDt,
-      "value": 0
-    },
-    {
-      "name": "Pee",
-      "date": startTrackDt,
-      "value": 0
-    }
-  ];
   // var trDetails = [];
   // init the template data
   // will be same for all traces
@@ -1414,7 +1379,8 @@ function EventTrack(props) {
         var estMils = est['seconds'] * 1000
         var dtest = new Date(estMils);
         console.log(dtest);
-        var tdateString = moment(dtest).format('YYYY-MM-DD hh:mm:ss');
+        console.log(est);
+        var tdateString = moment(est.toDate()).format('YYYY-MM-DD HH:mm:ss');
         console.log("elem", tdateString);
         console.log("elem", typeof (tdateString));
         console.log(value["type"]);
@@ -1448,13 +1414,6 @@ function EventTrack(props) {
   // const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
 
 
-  var trackDataPlot = [{
-    "date": "2021-06-30",
-    "total": 1,
-    "details": trDetails
-
-  }];
-  console.log(trackDataPlot);
   // console.log(trackDataOld);
   console.log(trackDataAll);
   var overview = "day";
