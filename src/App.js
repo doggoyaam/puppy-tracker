@@ -21,11 +21,6 @@ import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
 import styled from 'styled-components'
 
-// process.env.REACT_APP_FIREBASE_AUTH_DOMAIN
-// process.env.REACT_APP_FIREBASE_PROJ_ID
-// process.env.REACT_APP_FIREBASE_S_BUCKET
-// process.env.REACT_APP_FIREBASE_MSEND_ID
-// process.env.REACT_APP_FIREBASE_APP_ID
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -45,6 +40,8 @@ const auth = firebase.auth();
 const firestore = firebase.firestore();
 // const analytics = firebase.analytics();
 var _ = require('lodash');
+
+const evCollectionName = process.env.REACT_APP_FIREBASE_APP_COLL_NAME;
 
 
 function App() {
@@ -83,7 +80,7 @@ function App() {
 
 
 
-  const dgevents = firestore.collection('testevents');
+  const dgevents = firestore.collection(evCollectionName);
 
 
   // add current date time to window
@@ -124,7 +121,7 @@ function App() {
   };
 
   const saveEvent = async (evType, evData) => {
-    console.log("Save event", evType, evData);
+    // console.log("Save event", evType, evData);
 
     const { uid, photoURL } = auth.currentUser;
     // const sts = await firebase.firestore.FieldValue.serverTimestamp();
@@ -162,19 +159,19 @@ function App() {
 
     } else {
 
-      var today = new Date();
+      let today = new Date();
 
-      var tdateString = moment(today).format('YYYY-MM-DD');
+      let tdateString = moment(today).format('YYYY-MM-DD');
       // console.log(tdateString);
 
-      var stDt = new Date(evData.start_time);
+      let stDt = new Date(evData.start_time);
       // console.log(stDt);
       // var enDt = new Date(evData.end_time);
 
       // calc ev duration in seconds
       var evMins = parseInt(evData.ev_mins);
 
-      var durationSec = evMins * 60;
+      let durationSec = evMins * 60;
       console.log("duration:", durationSec);
 
 
@@ -888,14 +885,13 @@ function fmtTimeAgo(dObj) {
 
 function handleClickCard(e) {
   console.log("Clicked card");
-  console.log(e);
+  // console.log(e);
   console.log(e.target.getAttribute("data-key"))
 }
 
 function TimeLine() {
   console.log("Timelining");
-  const trackData = null;
-  const dgevents = firestore.collection('testevents');
+  const dgevents = firestore.collection(evCollectionName);
 
   const query = dgevents.orderBy('start_time', 'desc').limit(20);
   const [devents] = useCollectionData(query, { idField: 'id' });
@@ -905,9 +901,7 @@ function TimeLine() {
 
 
   // console.log("Got event track:", trackData);
-  var trDetails = [];
 
-  var trackDataAll = [];
 
   var lastAccident = null;
 
@@ -1159,7 +1153,7 @@ function SignIn() {
 }
 
 function SignOut() {
-  console.log(auth.user);
+  // console.log(auth.user);
   if (auth.user) {
     return (
       <button onClick={() => auth.signOut()}>Sign Out</button>
@@ -1216,7 +1210,7 @@ function TrackerView() {
 
 
 
-  const dgevents = firestore.collection('testevents');
+  const dgevents = firestore.collection(evCollectionName);
 
   // var start = moment().startOf('day'); // set to 12:00 am today
   // var end = moment().endOf('day'); // set to 23:59 pm today
@@ -1305,24 +1299,7 @@ function TrackerView() {
 
 
 
-  // var hms = dateArr.map((item, index) => {
-  //   return (
-  //     <div>
-  //       <p>{item}</p>
-  //       <EventTrack key={index} tdate={item} />
-  //     </div>
-  //   )
-  // });
 
-
-
-  // return (<>
-  //   <main>
-
-
-  //   </main>
-
-  // </>)
 
 
 }
