@@ -524,18 +524,15 @@ img {
 }
 
 .button-nap {
-  display:inline-block;
-  border:5px solid rgba(255,255,255,0);
-  /* max-height: 40px; */
-  border-radius:15px;
-  /* box-sizing: border-box; */
+  /* display:inline-block; */
+
   text-decoration:none;
   /* font-family:'Roboto',sans-serif; */
   font-weight:300;
   color:#FFFFFF;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  /* text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35); */
   text-align:center;
-  justify-content: center;
+  /* justify-content: center; */
   transition: all 0.2s;
 }
 .button-nap:hover {
@@ -546,23 +543,20 @@ img {
 .button-nap:active {
   transition: all 150ms linear;
   /* the 1px border change is responsible for the squeeze effect*/ 
-  border:1px solid #70587c;
+  /* border:1px solid #70587c; */
   opacity: .75;
 }
 
 .button-food {
-  display:inline-block;
-  border:5px solid rgba(255,255,255,0);
-  /* max-height: 40px; */
-  border-radius:15px;
-  /* box-sizing: border-box; */
+  /* display:inline-block; */
+
   text-decoration:none;
   /* font-family:'Roboto',sans-serif; */
   font-weight:300;
   color:#FFFFFF;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  /* text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35); */
   text-align:center;
-  justify-content: center;
+  /* justify-content: center; */
   transition: all 0.2s;
 }
 .button-food:hover {
@@ -573,23 +567,23 @@ img {
 .button-food:active {
   transition: all 150ms linear;
   /* the 1px border change is responsible for the squeeze effect*/ 
-  border:1px solid #3a7d44;
+  /* border:1px solid #3a7d44; */
   opacity: .75;
 }
 
 .button-water {
-  display:inline-block;
-  border:5px solid rgba(255,255,255,0);
+  /* display:inline-block; */
+  /* border:5px solid rgba(255,255,255,0); */
   /* max-height: 40px; */
-  border-radius:15px;
+  /* border-radius:15px; */
   /* box-sizing: border-box; */
   text-decoration:none;
   /* font-family:'Roboto',sans-serif; */
   font-weight:300;
   color:#FFFFFF;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  /* text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35); */
   text-align:center;
-  justify-content: center;
+  /* justify-content: center; */
   transition: all 0.2s;
 }
 .button-water:hover {
@@ -600,23 +594,23 @@ img {
 .button-water:active {
   transition: all 150ms linear;
   /* the 1px border change is responsible for the squeeze effect*/ 
-  border:1px solid #62bbc1;
+  /* border:1px solid #62bbc1; */
   opacity: .75;
 }
 
 .button-acc {
-  display:inline-block;
-  border:5px solid rgba(255,255,255,0);
+  /* display:inline-block; */
+  /* border:5px solid rgba(255,255,255,0); */
   /* max-height: 40px; */
-  border-radius:15px;
+  /* border-radius:15px; */
   /* box-sizing: border-box; */
   text-decoration:none;
   /* font-family:'Roboto',sans-serif; */
   font-weight:300;
   color:#FFFFFF;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  /* text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35); */
   text-align:center;
-  justify-content: center;
+  /* justify-content: center; */
   transition: all 0.2s;
 }
 .button-acc:hover {
@@ -627,23 +621,23 @@ img {
 .button-acc:active {
   transition: all 150ms linear;
   /* the 1px border change is responsible for the squeeze effect*/ 
-  border:1px solid #e40066;
+  /* border:1px solid #e40066; */
   opacity: .75;
 }
 
 .button-poop {
-  display:inline-block;
-  border:5px solid rgba(255,255,255,0);
+  /* display:inline-block; */
+  /* border:5px solid rgba(255,255,255,0); */
   /* max-height: 40px; */
-  border-radius:15px;
+  /* border-radius:15px; */
   /* box-sizing: border-box; */
   text-decoration:none;
   /* font-family:'Roboto',sans-serif; */
   font-weight:300;
   color:#FFFFFF;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  /* text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35); */
   text-align:center;
-  justify-content: center;
+  /* justify-content: center; */
   transition: all 0.2s;
 }
 .button-poop:hover {
@@ -654,23 +648,23 @@ img {
 .button-poop:active {
   transition: all 150ms linear;
   /* the 1px border change is responsible for the squeeze effect*/ 
-  border:1px solid #2C2217;
+  /* border:1px solid #2C2217; */
   opacity: .75;
 }
 
 .button-pee {
-  display:inline-block;
-  border:5px solid rgba(255,255,255,0);
+  /* display:inline-block; */
+  /* border:5px solid rgba(255,255,255,0); */
   /* max-height: 40px; */
-  border-radius:15px;
+  /* border-radius:15px; */
   /* box-sizing: border-box; */
   text-decoration:none;
   /* font-family:'Roboto',sans-serif; */
   font-weight:300;
   color:#FFFFFF;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  /* text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35); */
   text-align:center;
-  justify-content: center;
+  /* justify-content: center; */
   transition: all 0.2s;
 }
 .button-pee:hover {
@@ -681,6 +675,6 @@ img {
 .button-pee:active {
   transition: all 150ms linear;
   /* the 1px border change is responsible for the squeeze effect*/ 
-  border:1px solid #B69873;
+  /* border:1px solid #B69873; */
   opacity: .75;
 }

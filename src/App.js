@@ -885,7 +885,7 @@ function fmtTimeAgo(dObj) {
 
 function handleClickCard(e) {
   console.log("Clicked card");
-  // console.log(e);
+  console.log(e);
   console.log(e.target.getAttribute("data-key"))
 }
 
@@ -939,7 +939,8 @@ function TimeLine() {
         const subStr = fmtTimeAgo(dObj);
         // console.log(subStr);
         const messageClass = item.uid === auth.currentUser.uid ? 'sent' : 'received';
-        // console.log(item, messageClass);
+        console.log(item, messageClass);
+        console.log(item.id);
 
         const TimeAgoBlock = styled.div`
             &:before {
