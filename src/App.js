@@ -49,14 +49,56 @@ const evCollectionName = process.env.REACT_APP_FIREBASE_APP_COLL_NAME;
 const useShareableState = () => {
   // const [username, setUsername] = useState('Abrar');
 
+  // nap
   const [edNapIdValue, setEdNapIdValue] = useState(null);
   const [edNapStartTimeValue, setEdNapStartTimeValue] = useState(null);
   // set default times for sliders
   const [edNapTimeHrsValue, setEdNapTimeHrsValue] = useState(1);
   const [edNapTimeMinsValue, setEdNapTimeMinsValue] = useState(0);
   const [edNapNotesValue, setEdNapNotesValue] = useState("");
-
   const [showEditNap, setShowEditNap] = useState(false);
+
+
+  // Food
+  const [edFoodIdValue, setEdFoodIdValue] = useState(null);
+  const [edFoodStartTimeValue, setEdFoodStartTimeValue] = useState(null);
+  // set default times for sliders
+  const [edFoodTimeMinsValue, setEdFoodTimeMinsValue] = useState(5);
+  const [edFoodNotesValue, setEdFoodNotesValue] = useState("");
+  const [showEditFood, setShowEditFood] = useState(false);
+
+  // Water
+  const [edWaterIdValue, setEdWaterIdValue] = useState(null);
+  const [edWaterStartTimeValue, setEdWaterStartTimeValue] = useState(null);
+  // set default times for sliders
+  const [edWaterTimeMinsValue, setEdWaterTimeMinsValue] = useState(1);
+  const [edWaterNotesValue, setEdWaterNotesValue] = useState("");
+  const [showEditWater, setShowEditWater] = useState(false);
+
+  // Accident
+  const [edAccidentIdValue, setEdAccidentIdValue] = useState(null);
+  const [edAccidentStartTimeValue, setEdAccidentStartTimeValue] = useState(null);
+  // set default times for sliders
+  const [edAccidentTimeMinsValue, setEdAccidentTimeMinsValue] = useState(3);
+  const [edAccidentNotesValue, setEdAccidentNotesValue] = useState("");
+  const [showEditAccident, setShowEditAccident] = useState(false);
+
+  // Poop
+  const [edPoopIdValue, setEdPoopIdValue] = useState(null);
+  const [edPoopStartTimeValue, setEdPoopStartTimeValue] = useState(null);
+  // set default times for sliders
+  const [edPoopTimeMinsValue, setEdPoopTimeMinsValue] = useState(3);
+  const [edPoopNotesValue, setEdPoopNotesValue] = useState("");
+  const [showEditPoop, setShowEditPoop] = useState(false);
+
+
+  // Pee
+  const [edPeeIdValue, setEdPeeIdValue] = useState(null);
+  const [edPeeStartTimeValue, setEdPeeStartTimeValue] = useState(null);
+  // set default times for sliders
+  const [edPeeTimeMinsValue, setEdPeeTimeMinsValue] = useState(1);
+  const [edPeeNotesValue, setEdPeeNotesValue] = useState("");
+  const [showEditPee, setShowEditPee] = useState(false);
 
   // const [count, setCount] = useState(0);
   return {
@@ -71,7 +113,62 @@ const useShareableState = () => {
     edNapNotesValue,
     setEdNapNotesValue,
     showEditNap,
-    setShowEditNap
+    setShowEditNap,
+
+    edFoodIdValue,
+    setEdFoodIdValue,
+    edFoodStartTimeValue,
+    setEdFoodStartTimeValue,
+    edFoodTimeMinsValue,
+    setEdFoodTimeMinsValue,
+    edFoodNotesValue,
+    setEdFoodNotesValue,
+    showEditFood,
+    setShowEditFood,
+
+    edWaterIdValue,
+    setEdWaterIdValue,
+    edWaterStartTimeValue,
+    setEdWaterStartTimeValue,
+    edWaterTimeMinsValue,
+    setEdWaterTimeMinsValue,
+    edWaterNotesValue,
+    setEdWaterNotesValue,
+    showEditWater,
+    setShowEditWater,
+
+    edAccidentIdValue,
+    setEdAccidentIdValue,
+    edAccidentStartTimeValue,
+    setEdAccidentStartTimeValue,
+    edAccidentTimeMinsValue,
+    setEdAccidentTimeMinsValue,
+    edAccidentNotesValue,
+    setEdAccidentNotesValue,
+    showEditAccident,
+    setShowEditAccident,
+
+    edPoopIdValue,
+    setEdPoopIdValue,
+    edPoopStartTimeValue,
+    setEdPoopStartTimeValue,
+    edPoopTimeMinsValue,
+    setEdPoopTimeMinsValue,
+    edPoopNotesValue,
+    setEdPoopNotesValue,
+    showEditPoop,
+    setShowEditPoop,
+
+    edPeeIdValue,
+    setEdPeeIdValue,
+    edPeeStartTimeValue,
+    setEdPeeStartTimeValue,
+    edPeeTimeMinsValue,
+    setEdPeeTimeMinsValue,
+    edPeeNotesValue,
+    setEdPeeNotesValue,
+    showEditPee,
+    setShowEditPee
   }
 }
 
@@ -107,6 +204,20 @@ function App() {
   const [showPoop, setShowPoop] = useState(false);
   const [showPee, setShowPee] = useState(false);
 
+  // const {
+  //   edNapIdValue,
+  //   setEdNapIdValue,
+  //   edNapStartTimeValue,
+  //   setEdNapStartTimeValue,
+  //   edNapTimeHrsValue,
+  //   setEdNapTimeHrsValue,
+  //   edNapTimeMinsValue,
+  //   setEdNapTimeMinsValue,
+  //   edNapNotesValue,
+  //   setEdNapNotesValue,
+  //   showEditNap,
+  //   setShowEditNap } = useBetween(useShareableState);
+
   const {
     edNapIdValue,
     setEdNapIdValue,
@@ -119,7 +230,63 @@ function App() {
     edNapNotesValue,
     setEdNapNotesValue,
     showEditNap,
-    setShowEditNap } = useBetween(useShareableState);
+    setShowEditNap,
+
+    edFoodIdValue,
+    setEdFoodIdValue,
+    edFoodStartTimeValue,
+    setEdFoodStartTimeValue,
+    edFoodTimeMinsValue,
+    setEdFoodTimeMinsValue,
+    edFoodNotesValue,
+    setEdFoodNotesValue,
+    showEditFood,
+    setShowEditFood,
+
+    edWaterIdValue,
+    setEdWaterIdValue,
+    edWaterStartTimeValue,
+    setEdWaterStartTimeValue,
+    edWaterTimeMinsValue,
+    setEdWaterTimeMinsValue,
+    edWaterNotesValue,
+    setEdWaterNotesValue,
+    showEditWater,
+    setShowEditWater,
+
+    edAccidentIdValue,
+    setEdAccidentIdValue,
+    edAccidentStartTimeValue,
+    setEdAccidentStartTimeValue,
+    edAccidentTimeMinsValue,
+    setEdAccidentTimeMinsValue,
+    edAccidentNotesValue,
+    setEdAccidentNotesValue,
+    showEditAccident,
+    setShowEditAccident,
+
+    edPoopIdValue,
+    setEdPoopIdValue,
+    edPoopStartTimeValue,
+    setEdPoopStartTimeValue,
+    edPoopTimeMinsValue,
+    setEdPoopTimeMinsValue,
+    edPoopNotesValue,
+    setEdPoopNotesValue,
+    showEditPoop,
+    setShowEditPoop,
+
+    edPeeIdValue,
+    setEdPeeIdValue,
+    edPeeStartTimeValue,
+    setEdPeeStartTimeValue,
+    edPeeTimeMinsValue,
+    setEdPeeTimeMinsValue,
+    edPeeNotesValue,
+    setEdPeeNotesValue,
+    showEditPee,
+    setShowEditPee
+  } = useBetween(useShareableState);
 
 
   const [showAbout, setShowAbout] = useState(false);
@@ -145,11 +312,23 @@ function App() {
 
   const handleCloseNap = () => setShowNap(false);
   const handleCloseEditNap = () => setShowEditNap(false);
+
   const handleCloseFood = () => setShowFood(false);
+  const handleCloseEditFood = () => setShowEditFood(false);
+
   const handleClosePoop = () => setShowPoop(false);
+  const handleCloseEditPoop = () => setShowEditPoop(false);
+
   const handleClosePee = () => setShowPee(false);
+  const handleCloseEditPee = () => setShowEditPee(false);
+
   const handleCloseAccdnt = () => setShowAccdnt(false);
+  const handleCloseEditAccdnt = () => setShowEditAccident(false);
+
   const handleCloseWater = () => setShowWater(false);
+  const handleCloseEditWater = () => setShowEditWater(false);
+
+
 
   const showSchedule = (e) => {
     e.preventDefault();
@@ -248,9 +427,7 @@ function App() {
     const { uid, photoURL } = auth.currentUser;
     // for nap extract hours before duration conv
     if (evType === "Nap") {
-      var today = new Date();
 
-      var tdateString = moment(today).format('YYYY-MM-DD');
       // console.log(tdateString);
 
       var stDt = new Date(evData.start_time);
@@ -263,7 +440,7 @@ function App() {
       console.log("duration:", durationSec);
 
       // get event id
-      var evId = evData.ev_id;
+      let evId = evData.ev_id;
       console.log("event id", evId);
 
       await dgevents.doc(evId).update({
@@ -277,8 +454,6 @@ function App() {
 
 
     } else {
-      let today = new Date();
-      let tdateString = moment(today).format('YYYY-MM-DD');
       // console.log(tdateString);
 
       let stDt = new Date(evData.start_time);
@@ -289,15 +464,18 @@ function App() {
       let durationSec = evMins * 60;
       console.log("duration:", durationSec);
 
-      await dgevents.add({
-        type: evType,
-        create_date: tdateString,
+      // get event id
+      let evId = evData.ev_id;
+      console.log("event id", evId);
+
+      await dgevents.doc(evId).update({
         start_time: stDt,
         duration: durationSec,
         note: evData.notes,
         uid: uid,
         photoURL: photoURL
       });
+      console.log("Done updating event :)");
 
     }
 
@@ -408,6 +586,32 @@ function App() {
 
   };
 
+  const handleSaveEditFood = (e) => {
+    e.preventDefault();
+
+    console.log("Saving edit food");
+    // // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    updateEvent("Food", formDataObj);
+    handleCloseEditFood();
+    return true;
+
+  };
+
+  const handleDeleteFood = (e) => {
+    e.preventDefault();
+
+    console.log("deleting food");
+    const evId = edFoodIdValue;
+    deleteEvent(evId);
+
+    handleCloseEditFood();
+    return true;
+
+  };
+
   const handleShowWater = () => {
 
     // also gotta update current time
@@ -433,6 +637,32 @@ function App() {
 
   };
 
+  const handleSaveEditWater = (e) => {
+    e.preventDefault();
+
+    console.log("Saving edit Water");
+    // // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    updateEvent("Water", formDataObj);
+    handleCloseEditWater();
+    return true;
+
+  };
+
+  const handleDeleteWater = (e) => {
+    e.preventDefault();
+
+    console.log("deleting Water");
+    const evId = edWaterIdValue;
+    deleteEvent(evId);
+
+    handleCloseEditWater();
+    return true;
+
+  };
+
   const handleShowAccdnt = () => {
     // also gotta update current time
     const now = new Date();
@@ -454,6 +684,32 @@ function App() {
     console.log(formDataObj);
     saveEvent("Accident", formDataObj);
     handleCloseAccdnt();
+    return true;
+
+  };
+
+  const handleSaveEditAccident = (e) => {
+    e.preventDefault();
+
+    console.log("Saving edit Accident");
+    // // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    updateEvent("Accident", formDataObj);
+    handleCloseEditAccdnt();
+    return true;
+
+  };
+
+  const handleDeleteAccident = (e) => {
+    e.preventDefault();
+
+    console.log("deleting Accident");
+    const evId = edAccidentIdValue;
+    deleteEvent(evId);
+
+    handleCloseEditAccdnt();
     return true;
 
   };
@@ -487,6 +743,32 @@ function App() {
 
   };
 
+  const handleSaveEditPoop = (e) => {
+    e.preventDefault();
+
+    console.log("Saving edit Poop");
+    // // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    updateEvent("Poop", formDataObj);
+    handleCloseEditPoop();
+    return true;
+
+  };
+
+  const handleDeletePoop = (e) => {
+    e.preventDefault();
+
+    console.log("deleting Poop");
+    const evId = edPoopIdValue;
+    deleteEvent(evId);
+
+    handleCloseEditPoop();
+    return true;
+
+  };
+
   const handleShowPee = () => {
     // also gotta update current time
     const now = new Date();
@@ -507,6 +789,32 @@ function App() {
     console.log(formDataObj);
     saveEvent("Pee", formDataObj);
     handleClosePee();
+    return true;
+
+  };
+
+  const handleSaveEditPee = (e) => {
+    e.preventDefault();
+
+    console.log("Saving edit Pee");
+    // // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    updateEvent("Pee", formDataObj);
+    handleCloseEditPee();
+    return true;
+
+  };
+
+  const handleDeletePee = (e) => {
+    e.preventDefault();
+
+    console.log("deleting Pee");
+    const evId = edPeeIdValue;
+    deleteEvent(evId);
+
+    handleCloseEditPee();
     return true;
 
   };
@@ -678,14 +986,11 @@ function App() {
 
 
               <Modal show={showEditNap} onHide={handleCloseEditNap} animation={false} backdrop="static">
-
                 <Form noValidate onSubmit={handleSaveEditNap}>
-
                   <Modal.Body>
                     <Form.Group controlId="exampleForm.ControlInput1Edit">
                       <Form.Label>Event Type: <b>(Edit) Nap</b> </Form.Label>
                       <Form.Control plaintext readOnly name='ev_id' defaultValue={edNapIdValue} />
-
                       <Button variant="danger" onClick={handleDeleteNap}>
                         Delete Event
                       </Button>
@@ -693,11 +998,8 @@ function App() {
                       <Form.Label>Start Time</Form.Label>
                       <Form.Control type="datetime-local" name='start_time' defaultValue={edNapStartTimeValue} />
 
-
                       <Form.Label>Duration: <b>{edNapTimeHrsValue}</b> hours <b>{edNapTimeMinsValue}</b> minutes</Form.Label>
                       <br></br>
-
-
                       <Form.Label>Hours</Form.Label>
                       <Form.Control
                         type="range"
@@ -721,20 +1023,14 @@ function App() {
                       <Form.Label>Notes</Form.Label>
                       <Form.Control as="textarea" name='notes' rows={3} defaultValue={edNapNotesValue} onChange={changeEvent => setEdNapNotesValue(changeEvent.target.value)} />
                     </Form.Group>
-
-
-
-
                   </Modal.Body>
                   <Modal.Footer>
-
                     <Button variant="secondary" onClick={handleCloseEditNap}>
                       Close
                     </Button>
                     <Button type="submit" variant="primary">
                       Save Changes
                     </Button>
-
                   </Modal.Footer>
                 </Form>
               </Modal>
@@ -786,6 +1082,47 @@ function App() {
                     Save Changes
                   </Button>
 
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
+
+            <Modal show={showEditFood} onHide={handleCloseEditFood} animation={false} backdrop="static">
+              <Form noValidate onSubmit={handleSaveEditFood}>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput1Edit2">
+                    <Form.Label>Event Type: <b>(Edit) Food</b> </Form.Label>
+                    <Form.Control plaintext readOnly name='ev_id' defaultValue={edFoodIdValue} />
+                    <Button variant="danger" onClick={handleDeleteFood}>
+                      Delete Event
+                    </Button>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={edFoodStartTimeValue} />
+
+                    <Form.Label>Duration: <b>{edFoodTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={59}
+                      step={10}
+                      defaultValue={edFoodTimeMinsValue}
+                      onChange={changeEvent => setEdFoodTimeMinsValue(changeEvent.target.value)} />
+
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} defaultValue={edFoodNotesValue} onChange={changeEvent => setEdFoodNotesValue(changeEvent.target.value)} />
+                  </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseEditFood}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
                 </Modal.Footer>
               </Form>
             </Modal>
@@ -1107,6 +1444,7 @@ function fmtTimeAgo(dObj) {
 function TimeLine() {
   console.log("Timelining");
 
+
   const {
     edNapIdValue,
     setEdNapIdValue,
@@ -1119,7 +1457,63 @@ function TimeLine() {
     edNapNotesValue,
     setEdNapNotesValue,
     showEditNap,
-    setShowEditNap } = useBetween(useShareableState);
+    setShowEditNap,
+
+    edFoodIdValue,
+    setEdFoodIdValue,
+    edFoodStartTimeValue,
+    setEdFoodStartTimeValue,
+    edFoodTimeMinsValue,
+    setEdFoodTimeMinsValue,
+    edFoodNotesValue,
+    setEdFoodNotesValue,
+    showEditFood,
+    setShowEditFood,
+
+    edWaterIdValue,
+    setEdWaterIdValue,
+    edWaterStartTimeValue,
+    setEdWaterStartTimeValue,
+    edWaterTimeMinsValue,
+    setEdWaterTimeMinsValue,
+    edWaterNotesValue,
+    setEdWaterNotesValue,
+    showEditWater,
+    setShowEditWater,
+
+    edAccidentIdValue,
+    setEdAccidentIdValue,
+    edAccidentStartTimeValue,
+    setEdAccidentStartTimeValue,
+    edAccidentTimeMinsValue,
+    setEdAccidentTimeMinsValue,
+    edAccidentNotesValue,
+    setEdAccidentNotesValue,
+    showEditAccident,
+    setShowEditAccident,
+
+    edPoopIdValue,
+    setEdPoopIdValue,
+    edPoopStartTimeValue,
+    setEdPoopStartTimeValue,
+    edPoopTimeMinsValue,
+    setEdPoopTimeMinsValue,
+    edPoopNotesValue,
+    setEdPoopNotesValue,
+    showEditPoop,
+    setShowEditPoop,
+
+    edPeeIdValue,
+    setEdPeeIdValue,
+    edPeeStartTimeValue,
+    setEdPeeStartTimeValue,
+    edPeeTimeMinsValue,
+    setEdPeeTimeMinsValue,
+    edPeeNotesValue,
+    setEdPeeNotesValue,
+    showEditPee,
+    setShowEditPee
+  } = useBetween(useShareableState);
 
   const dgevents = firestore.collection(evCollectionName);
 
@@ -1131,9 +1525,9 @@ function TimeLine() {
 
 
 
-  const handleShowEditNap = (dataKey) => {
+  const handleShowEditEventWrapper = (dataKey) => {
     // set the time appropriately
-    console.log("Handle show edit nap");
+    console.log("Handle show edit event wrapper");
     console.log(dataKey);
     // const now = new Date();
     // now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -1150,26 +1544,53 @@ function TimeLine() {
           console.log("Got snap")
           const elemData = snap.data();
           console.log(elemData);
+          const evType = elemData.type;
           const stTime = elemData.start_time; //.toDate().toISOString(0, 16);
           // Note the T
           // Need to format as below for the datetime input 
 
           var stTimeStr = moment(stTime.toDate()).format('YYYY-MM-DDTHH:mm');
 
-          console.log(stTimeStr);
-          setEdNapIdValue(dataKey);
-          setEdNapStartTimeValue(stTimeStr);
-          setEdNapNotesValue(elemData.note);
-
-
-          setShowEditNap(true);
+          console.log("type", evType, " start time", stTimeStr);
+          if (evType === "Nap") {
+            setEdNapIdValue(dataKey);
+            setEdNapStartTimeValue(stTimeStr);
+            setEdNapNotesValue(elemData.note);
+            setShowEditNap(true);
+          } else if (evType === "Food") {
+            setEdFoodIdValue(dataKey);
+            setEdFoodStartTimeValue(stTimeStr);
+            setEdFoodNotesValue(elemData.note);
+            setShowEditFood(true);
+          } else if (evType === "Water") {
+            setEdWaterIdValue(dataKey);
+            setEdWaterStartTimeValue(stTimeStr);
+            setEdWaterNotesValue(elemData.note);
+            setShowEditWater(true);
+          } else if (evType === "Accident") {
+            setEdAccidentIdValue(dataKey);
+            setEdAccidentStartTimeValue(stTimeStr);
+            setEdAccidentNotesValue(elemData.note);
+            setShowEditAccident(true);
+          } else if (evType === "Poop") {
+            setEdPoopIdValue(dataKey);
+            setEdPoopStartTimeValue(stTimeStr);
+            setEdPoopNotesValue(elemData.note);
+            setShowEditPoop(true);
+          } else if (evType === "Pee") {
+            setEdPeeIdValue(dataKey);
+            setEdPeeStartTimeValue(stTimeStr);
+            setEdPeeNotesValue(elemData.note);
+            setShowEditPee(true);
+          } else {
+            console.log("Unknown update type");
+          }
 
         })
         .catch(function (error) {
           // The document probably doesn't exist.
           console.error("Error updating document: ", error);
         });
-      console.log(elemRef);
     }
 
   }
@@ -1180,7 +1601,7 @@ function TimeLine() {
     const dataKey = e.target.getAttribute("data-key");
 
 
-    handleShowEditNap(dataKey);
+    handleShowEditEventWrapper(dataKey);
   }
 
 
@@ -1250,7 +1671,7 @@ function TimeLine() {
               </div>
               <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
                 <div class="propic">
-                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                  <img src={item.photoURL} />
                 </div>
                 <h4 class="timeline-title"><span class="badge">Nap</span></h4>
                 <p>{item.note}</p>
@@ -1268,9 +1689,9 @@ function TimeLine() {
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body">
+              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
                 <div class="propic">
-                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                  <img src={item.photoURL} />
                 </div>
                 <h4 class="timeline-title"><span class="badge">Food</span></h4>
                 <p>{item.note}</p>
@@ -1286,9 +1707,9 @@ function TimeLine() {
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body">
+              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
                 <div class="propic">
-                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                  <img src={item.photoURL} />
                 </div>
                 <h4 class="timeline-title"><span class="badge">Water</span></h4>
                 <p>{item.note}</p>
@@ -1306,9 +1727,9 @@ function TimeLine() {
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body">
+              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
                 <div class="propic">
-                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                  <img src={item.photoURL} />
                 </div>
                 <h4 class="timeline-title"><span class="badge">Accident</span></h4>
                 <p>{item.note}</p>
@@ -1326,9 +1747,9 @@ function TimeLine() {
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body">
+              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
                 <div class="propic">
-                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                  <img src={item.photoURL} />
                 </div>
                 <h4 class="timeline-title"><span class="badge">Poop</span></h4>
                 <p>{item.note}</p>
@@ -1341,13 +1762,13 @@ function TimeLine() {
 
         else if (item.type === "Pee") {
           return (
-            <div class="timeline-container evpee">
+            <div class="timeline-container evpee" key={index} data-key={item.id} onClick={handleClickCard}>
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body">
+              <div class="timeline-body" >
                 <div class="propic">
-                  <img src={item.photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
+                  <img src={item.photoURL} />
                 </div>
                 <h4 class="timeline-title"><span class="badge">Pee</span></h4>
                 <p>{item.note}</p>
