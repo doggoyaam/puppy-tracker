@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useBetween } from "use-between";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -20,6 +21,7 @@ import CalendarHeatmap from './calendar-heatmap.component'
 import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
 import styled from 'styled-components'
+import { isCompositeComponent } from 'react-dom/cjs/react-dom-test-utils.production.min';
 
 
 if (!firebase.apps.length) {
@@ -42,6 +44,37 @@ const firestore = firebase.firestore();
 var _ = require('lodash');
 
 const evCollectionName = process.env.REACT_APP_FIREBASE_APP_COLL_NAME;
+
+
+const useShareableState = () => {
+  // const [username, setUsername] = useState('Abrar');
+
+  const [edNapIdValue, setEdNapIdValue] = useState(null);
+  const [edNapStartTimeValue, setEdNapStartTimeValue] = useState(null);
+  // set default times for sliders
+  const [edNapTimeHrsValue, setEdNapTimeHrsValue] = useState(1);
+  const [edNapTimeMinsValue, setEdNapTimeMinsValue] = useState(0);
+  const [edNapNotesValue, setEdNapNotesValue] = useState("");
+
+  const [showEditNap, setShowEditNap] = useState(false);
+
+  // const [count, setCount] = useState(0);
+  return {
+    edNapIdValue,
+    setEdNapIdValue,
+    edNapStartTimeValue,
+    setEdNapStartTimeValue,
+    edNapTimeHrsValue,
+    setEdNapTimeHrsValue,
+    edNapTimeMinsValue,
+    setEdNapTimeMinsValue,
+    edNapNotesValue,
+    setEdNapNotesValue,
+    showEditNap,
+    setShowEditNap
+  }
+}
+
 
 
 function App() {
@@ -74,6 +107,20 @@ function App() {
   const [showPoop, setShowPoop] = useState(false);
   const [showPee, setShowPee] = useState(false);
 
+  const {
+    edNapIdValue,
+    setEdNapIdValue,
+    edNapStartTimeValue,
+    setEdNapStartTimeValue,
+    edNapTimeHrsValue,
+    setEdNapTimeHrsValue,
+    edNapTimeMinsValue,
+    setEdNapTimeMinsValue,
+    edNapNotesValue,
+    setEdNapNotesValue,
+    showEditNap,
+    setShowEditNap } = useBetween(useShareableState);
+
 
   const [showAbout, setShowAbout] = useState(false);
 
@@ -97,6 +144,7 @@ function App() {
   )
 
   const handleCloseNap = () => setShowNap(false);
+  const handleCloseEditNap = () => setShowEditNap(false);
   const handleCloseFood = () => setShowFood(false);
   const handleClosePoop = () => setShowPoop(false);
   const handleClosePee = () => setShowPee(false);
@@ -191,6 +239,87 @@ function App() {
 
 
   }
+
+
+
+  const updateEvent = async (evType, evData) => {
+    console.log("Update event", evType, evData);
+
+    const { uid, photoURL } = auth.currentUser;
+    // for nap extract hours before duration conv
+    if (evType === "Nap") {
+      var today = new Date();
+
+      var tdateString = moment(today).format('YYYY-MM-DD');
+      // console.log(tdateString);
+
+      var stDt = new Date(evData.start_time);
+      // calc nap duration in seconds
+      var napHours = parseInt(evData.ev_hours);
+      var napMins = parseInt(evData.ev_mins);
+
+      var durationSec = (napHours * 60 * 60) + (napMins * 60);
+      console.log(napHours, napMins);
+      console.log("duration:", durationSec);
+
+      // get event id
+      var evId = evData.ev_id;
+      console.log("event id", evId);
+
+      await dgevents.doc(evId).update({
+        start_time: stDt,
+        duration: durationSec,
+        note: evData.notes,
+        uid: uid,
+        photoURL: photoURL
+      });
+      console.log("Done updating nap :)");
+
+
+    } else {
+      let today = new Date();
+      let tdateString = moment(today).format('YYYY-MM-DD');
+      // console.log(tdateString);
+
+      let stDt = new Date(evData.start_time);
+      // console.log(stDt);
+      // calc ev duration in seconds
+      var evMins = parseInt(evData.ev_mins);
+
+      let durationSec = evMins * 60;
+      console.log("duration:", durationSec);
+
+      await dgevents.add({
+        type: evType,
+        create_date: tdateString,
+        start_time: stDt,
+        duration: durationSec,
+        note: evData.notes,
+        uid: uid,
+        photoURL: photoURL
+      });
+
+    }
+
+  }
+
+
+
+  const deleteEvent = async (evId) => {
+    console.log("Delete event", evId);
+
+    await dgevents.doc(evId).delete();
+    console.log("Done deleting event :)");
+
+
+  }
+
+
+
+
+
+
+
   // console.log("User:", user);
   let usrLayout = null;
 
@@ -221,6 +350,33 @@ function App() {
     console.log(formDataObj);
     saveEvent("Nap", formDataObj);
     handleCloseNap();
+    return true;
+
+  };
+
+  const handleSaveEditNap = (e) => {
+    e.preventDefault();
+
+    console.log("Saving edit nap");
+    // // console.log(e);
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    updateEvent("Nap", formDataObj);
+    handleCloseEditNap();
+    return true;
+
+  };
+
+  const handleDeleteNap = (e) => {
+    e.preventDefault();
+
+    console.log("deleting nap");
+    const napId = edNapIdValue;
+    console.log("Nap id", napId);
+    deleteEvent(napId);
+
+    handleCloseEditNap();
     return true;
 
   };
@@ -510,6 +666,69 @@ function App() {
                   </Modal.Body>
                   <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseNap}>
+                      Close
+                    </Button>
+                    <Button type="submit" variant="primary">
+                      Save Changes
+                    </Button>
+
+                  </Modal.Footer>
+                </Form>
+              </Modal>
+
+
+              <Modal show={showEditNap} onHide={handleCloseEditNap} animation={false} backdrop="static">
+
+                <Form noValidate onSubmit={handleSaveEditNap}>
+
+                  <Modal.Body>
+                    <Form.Group controlId="exampleForm.ControlInput1Edit">
+                      <Form.Label>Event Type: <b>(Edit) Nap</b> </Form.Label>
+                      <Form.Control plaintext readOnly name='ev_id' defaultValue={edNapIdValue} />
+
+                      <Button variant="danger" onClick={handleDeleteNap}>
+                        Delete Event
+                      </Button>
+                      <br></br>
+                      <Form.Label>Start Time</Form.Label>
+                      <Form.Control type="datetime-local" name='start_time' defaultValue={edNapStartTimeValue} />
+
+
+                      <Form.Label>Duration: <b>{edNapTimeHrsValue}</b> hours <b>{edNapTimeMinsValue}</b> minutes</Form.Label>
+                      <br></br>
+
+
+                      <Form.Label>Hours</Form.Label>
+                      <Form.Control
+                        type="range"
+                        name='ev_hours'
+                        min={0}
+                        max={12}
+                        step={1}
+                        defaultValue={edNapTimeHrsValue}
+                        onChange={changeEvent => setEdNapTimeHrsValue(changeEvent.target.value)} />
+
+                      <Form.Label>Minutes</Form.Label>
+                      <Form.Control
+                        type="range"
+                        name='ev_mins'
+                        min={0}
+                        max={59}
+                        step={10}
+                        defaultValue={edNapTimeMinsValue}
+                        onChange={changeEvent => setEdNapTimeMinsValue(changeEvent.target.value)} />
+
+                      <Form.Label>Notes</Form.Label>
+                      <Form.Control as="textarea" name='notes' rows={3} defaultValue={edNapNotesValue} onChange={changeEvent => setEdNapNotesValue(changeEvent.target.value)} />
+                    </Form.Group>
+
+
+
+
+                  </Modal.Body>
+                  <Modal.Footer>
+
+                    <Button variant="secondary" onClick={handleCloseEditNap}>
                       Close
                     </Button>
                     <Button type="submit" variant="primary">
@@ -883,19 +1102,86 @@ function fmtTimeAgo(dObj) {
 
 }
 
-function handleClickCard(e) {
-  console.log("Clicked card");
-  console.log(e);
-  console.log(e.target.getAttribute("data-key"))
-}
+
 
 function TimeLine() {
   console.log("Timelining");
+
+  const {
+    edNapIdValue,
+    setEdNapIdValue,
+    edNapStartTimeValue,
+    setEdNapStartTimeValue,
+    edNapTimeHrsValue,
+    setEdNapTimeHrsValue,
+    edNapTimeMinsValue,
+    setEdNapTimeMinsValue,
+    edNapNotesValue,
+    setEdNapNotesValue,
+    showEditNap,
+    setShowEditNap } = useBetween(useShareableState);
+
   const dgevents = firestore.collection(evCollectionName);
 
   const query = dgevents.orderBy('start_time', 'desc').limit(20);
   const [devents] = useCollectionData(query, { idField: 'id' });
   // console.log(devents);
+
+
+
+
+
+  const handleShowEditNap = (dataKey) => {
+    // set the time appropriately
+    console.log("Handle show edit nap");
+    console.log(dataKey);
+    // const now = new Date();
+    // now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    // // only get to minutes
+    // let nowTimeStr = now.toISOString().slice(0, 16);
+    // console.log("Now time", nowTimeStr);
+    // setNowTimeValue(nowTimeStr);
+    if (dataKey === null) {
+      console.log("No data key");
+    } else {
+
+      const elemRef = dgevents.doc(dataKey).get()
+        .then((snap) => {
+          console.log("Got snap")
+          const elemData = snap.data();
+          console.log(elemData);
+          const stTime = elemData.start_time; //.toDate().toISOString(0, 16);
+          // Note the T
+          // Need to format as below for the datetime input 
+
+          var stTimeStr = moment(stTime.toDate()).format('YYYY-MM-DDTHH:mm');
+
+          console.log(stTimeStr);
+          setEdNapIdValue(dataKey);
+          setEdNapStartTimeValue(stTimeStr);
+          setEdNapNotesValue(elemData.note);
+
+
+          setShowEditNap(true);
+
+        })
+        .catch(function (error) {
+          // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+        });
+      console.log(elemRef);
+    }
+
+  }
+
+  const handleClickCard = (e) => {
+    console.log("Clicked card");
+    console.log(e);
+    const dataKey = e.target.getAttribute("data-key");
+
+
+    handleShowEditNap(dataKey);
+  }
 
 
 
