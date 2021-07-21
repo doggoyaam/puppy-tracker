@@ -1107,8 +1107,8 @@ function App() {
                       type="range"
                       name='ev_mins'
                       min={0}
-                      max={59}
-                      step={10}
+                      max={30}
+                      step={1}
                       defaultValue={edFoodTimeMinsValue}
                       onChange={changeEvent => setEdFoodTimeMinsValue(changeEvent.target.value)} />
 
@@ -1179,6 +1179,46 @@ function App() {
               </Form>
             </Modal>
 
+            <Modal show={showEditWater} onHide={handleCloseEditWater} animation={false} backdrop="static">
+              <Form noValidate onSubmit={handleSaveEditWater}>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput1Edit3">
+                    <Form.Label>Event Type: <b>(Edit) Water</b> </Form.Label>
+                    <Form.Control plaintext readOnly name='ev_id' defaultValue={edWaterIdValue} />
+                    <Button variant="danger" onClick={handleDeleteWater}>
+                      Delete Event
+                    </Button>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={edWaterStartTimeValue} />
+
+                    <Form.Label>Duration: <b>{edWaterTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={edWaterTimeMinsValue}
+                      onChange={changeEvent => setEdWaterTimeMinsValue(changeEvent.target.value)} />
+
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} defaultValue={edWaterNotesValue} onChange={changeEvent => setEdWaterNotesValue(changeEvent.target.value)} />
+                  </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseEditWater}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
           </div>
 
 
@@ -1214,9 +1254,6 @@ function App() {
                     <Form.Control as="textarea" name='notes' rows={3} />
                   </Form.Group>
 
-
-
-
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleCloseAccdnt}>
@@ -1226,6 +1263,46 @@ function App() {
                     Save Changes
                   </Button>
 
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
+            <Modal show={showEditAccident} onHide={handleCloseEditAccdnt} animation={false} backdrop="static">
+              <Form noValidate onSubmit={handleSaveEditAccident}>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput1Edit4">
+                    <Form.Label>Event Type: <b>(Edit) Accident</b> </Form.Label>
+                    <Form.Control plaintext readOnly name='ev_id' defaultValue={edAccidentIdValue} />
+                    <Button variant="danger" onClick={handleDeleteAccident}>
+                      Delete Event
+                    </Button>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={edAccidentStartTimeValue} />
+
+                    <Form.Label>Duration: <b>{edAccidentTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={edAccidentTimeMinsValue}
+                      onChange={changeEvent => setEdAccidentTimeMinsValue(changeEvent.target.value)} />
+
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} defaultValue={edAccidentNotesValue} onChange={changeEvent => setEdAccidentNotesValue(changeEvent.target.value)} />
+                  </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseEditAccdnt}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
                 </Modal.Footer>
               </Form>
             </Modal>
@@ -1281,6 +1358,47 @@ function App() {
               </Form>
             </Modal>
 
+
+            <Modal show={showEditPoop} onHide={handleCloseEditPoop} animation={false} backdrop="static">
+              <Form noValidate onSubmit={handleSaveEditPoop}>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput1Edit5">
+                    <Form.Label>Event Type: <b>(Edit) Poop</b> </Form.Label>
+                    <Form.Control plaintext readOnly name='ev_id' defaultValue={edPoopIdValue} />
+                    <Button variant="danger" onClick={handleDeletePoop}>
+                      Delete Event
+                    </Button>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={edPoopStartTimeValue} />
+
+                    <Form.Label>Duration: <b>{edPoopTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={edPoopTimeMinsValue}
+                      onChange={changeEvent => setEdPoopTimeMinsValue(changeEvent.target.value)} />
+
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} defaultValue={edPoopNotesValue} onChange={changeEvent => setEdPoopNotesValue(changeEvent.target.value)} />
+                  </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseEditPoop}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
           </div>
 
           <div>
@@ -1329,6 +1447,47 @@ function App() {
                     Save Changes
                   </Button>
 
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
+
+            <Modal show={showEditPee} onHide={handleCloseEditPee} animation={false} backdrop="static">
+              <Form noValidate onSubmit={handleSaveEditPee}>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput1Edit6">
+                    <Form.Label>Event Type: <b>(Edit) Pee</b> </Form.Label>
+                    <Form.Control plaintext readOnly name='ev_id' defaultValue={edPeeIdValue} />
+                    <Button variant="danger" onClick={handleDeletePee}>
+                      Delete Event
+                    </Button>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={edPeeStartTimeValue} />
+
+                    <Form.Label>Duration: <b>{edPeeTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={30}
+                      step={1}
+                      defaultValue={edPeeTimeMinsValue}
+                      onChange={changeEvent => setEdPeeTimeMinsValue(changeEvent.target.value)} />
+
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} defaultValue={edPeeNotesValue} onChange={changeEvent => setEdPeeNotesValue(changeEvent.target.value)} />
+                  </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseEditPee}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
                 </Modal.Footer>
               </Form>
             </Modal>
@@ -1669,11 +1828,11 @@ function TimeLine() {
               <div class="timeline-icon">
 
               </div>
-              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
+              <div class="timeline-body" key={index} >
                 <div class="propic">
                   <img src={item.photoURL} />
                 </div>
-                <h4 class="timeline-title"><span class="badge">Nap</span></h4>
+                <h4 class="timeline-title"><span class="badge" data-key={item.id} onClick={handleClickCard}>Nap</span></h4>
                 <p>{item.note}</p>
 
                 <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
@@ -1689,11 +1848,11 @@ function TimeLine() {
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
+              <div class="timeline-body" key={index} >
                 <div class="propic">
                   <img src={item.photoURL} />
                 </div>
-                <h4 class="timeline-title"><span class="badge">Food</span></h4>
+                <h4 class="timeline-title"><span class="badge" data-key={item.id} onClick={handleClickCard}>Food</span></h4>
                 <p>{item.note}</p>
                 <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
               </div>
@@ -1707,11 +1866,11 @@ function TimeLine() {
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
+              <div class="timeline-body" key={index} >
                 <div class="propic">
                   <img src={item.photoURL} />
                 </div>
-                <h4 class="timeline-title"><span class="badge">Water</span></h4>
+                <h4 class="timeline-title"><span class="badge" data-key={item.id} onClick={handleClickCard}>Water</span></h4>
                 <p>{item.note}</p>
 
                 <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
@@ -1727,11 +1886,11 @@ function TimeLine() {
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
+              <div class="timeline-body" key={index} >
                 <div class="propic">
                   <img src={item.photoURL} />
                 </div>
-                <h4 class="timeline-title"><span class="badge">Accident</span></h4>
+                <h4 class="timeline-title"><span class="badge" data-key={item.id} onClick={handleClickCard}>Accident</span></h4>
                 <p>{item.note}</p>
 
                 <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
@@ -1747,11 +1906,11 @@ function TimeLine() {
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body" key={index} data-key={item.id} onClick={handleClickCard}>
+              <div class="timeline-body" key={index} >
                 <div class="propic">
                   <img src={item.photoURL} />
                 </div>
-                <h4 class="timeline-title"><span class="badge">Poop</span></h4>
+                <h4 class="timeline-title"><span class="badge" data-key={item.id} onClick={handleClickCard}>Poop</span></h4>
                 <p>{item.note}</p>
 
                 <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
@@ -1762,15 +1921,15 @@ function TimeLine() {
 
         else if (item.type === "Pee") {
           return (
-            <div class="timeline-container evpee" key={index} data-key={item.id} onClick={handleClickCard}>
+            <div class="timeline-container evpee" >
               <div class="timeline-icon">
                 <i class="far fa-grin-wink"></i>
               </div>
-              <div class="timeline-body" >
+              <div class="timeline-body" key={index}>
                 <div class="propic">
                   <img src={item.photoURL} />
                 </div>
-                <h4 class="timeline-title"><span class="badge">Pee</span></h4>
+                <h4 class="timeline-title"><span class="badge" data-key={item.id} onClick={handleClickCard}>Pee</span></h4>
                 <p>{item.note}</p>
 
                 <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>

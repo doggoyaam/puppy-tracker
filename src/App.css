@@ -417,6 +417,8 @@ img {
   border-radius: 3px;
   font-size: 12px;
   font-weight: bold;
+  cursor: pointer;
+
 }
 .timeline .timeline-container .timeline-body .timeline-footer {
   /* position: relative; */
