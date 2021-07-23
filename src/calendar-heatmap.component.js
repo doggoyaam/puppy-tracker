@@ -1629,11 +1629,82 @@ class CalendarHeatmap extends React.Component {
 
         this.labels.selectAll('.label-time')
           // Woah! The transform is the translate!
-          .attr("transform", "translate(" + d3.event.transform.x + "," + 0 + ")")
+          .attr("transform", "translate(" + (d3.event.transform.x) + "," + 0 + ")")
 
 
         this.items.selectAll('.item-block')
           .attr("transform", "translate(" + d3.event.transform.x + "," + 0 + ")")
+
+
+
+          .on('mouseover', d => {
+            if (this.in_transition) { return }
+
+            // Construct tooltip
+            let tooltip_html = ''
+            tooltip_html += `<div class="${styles.header}"><strong>${d.name}</strong><div><br>`
+            tooltip_html += '<div><strong>' + (d.value ? this.formatTime(d.value) : 'No time') + ' tracked</strong></div>'
+            tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY HH:mm') + '</div>'
+
+            // Calculate tooltip position
+            let x = d.value * 100 / (60 * 60 * 24) //+ itemScale(moment(d.date))
+            while (this.settings.width - x < (this.settings.tooltip_width + this.settings.tooltip_padding * 3)) {
+              x -= 10
+            }
+            let y = projectScale(d.name) + projectScale.bandwidth() / 2 + this.settings.tooltip_padding / 2
+
+            // Show tooltip
+            this.tooltip.html(tooltip_html)
+              .style('left', x + 'px')
+              .style('top', y + 'px')
+              .transition()
+              .duration(this.settings.transition_duration / 2)
+              .ease(d3.easeLinear)
+              .style('opacity', 1)
+          })
+          .on('mouseout', () => {
+            if (this.in_transition) { return }
+            this.hideTooltip()
+          })
+          .on('click', d => {
+            if (!!this.props.handler && typeof this.props.handler == 'function') {
+              this.props.handler(d)
+            }
+          })
+          .transition()
+          .delay(() => {
+            return (Math.cos(Math.PI * Math.random()) + 1) * this.settings.transition_duration
+          })
+          .duration(() => {
+            return this.settings.transition_duration
+          })
+          .ease(d3.easeLinear)
+          .style('opacity', 1)
+          .call((transition, callback) => {
+            if (transition.empty()) {
+              callback()
+            }
+            let n = 0
+            transition
+              .each(() => ++n)
+              .on('end', function () {
+                if (!--n) {
+                  callback.apply(this, arguments)
+                }
+              })
+          }, () => {
+            this.in_transition = false
+          })
+
+
+
+        // this.tooltip.selectAll()
+        // .style('left', d3.event.transform.x + "px")
+        // .style('x', d3.event.transform.x)
+        // .attr("transform", "translate(" + d3.event.transform.x + "," + 0 + ")")
+
+
+        // .style("transform", "translate(" + d3.event.transform.x + "," + 0 + ")")
       }));
 
     // this.svg.call(d3.zoom()

@@ -905,131 +905,119 @@ function App() {
 
 
 
+        <div>
+
+          <Container>
+            <Modal show={showNap} onHide={handleCloseNap} animation={false} backdrop="static">
+
+              <Form noValidate onSubmit={handleSaveNap}>
+
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput1">
+                    <Form.Label>Event Type: <b>Nap</b> </Form.Label>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
+
+
+                    <Form.Label>Duration: <b>{napTimeHrsValue}</b> hours <b>{napTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+
+
+                    <Form.Label>Hours</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_hours'
+                      min={0}
+                      max={12}
+                      step={1}
+                      defaultValue={napTimeHrsValue}
+                      onChange={changeEvent => setNapTimeHrsValue(changeEvent.target.value)} />
+
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={59}
+                      step={10}
+                      defaultValue={napTimeMinsValue}
+                      onChange={changeEvent => setNapTimeMinsValue(changeEvent.target.value)} />
+
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} />
+                  </Form.Group>
 
 
 
 
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseNap}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
 
-        <footer>
-          <div>
-            <button class="button-nap" onClick={handleShowNap}>
-              Nap
-            </button >
-            <Container>
-              <Modal show={showNap} onHide={handleCloseNap} animation={false} backdrop="static">
-
-                <Form noValidate onSubmit={handleSaveNap}>
-
-                  <Modal.Body>
-                    <Form.Group controlId="exampleForm.ControlInput1">
-                      <Form.Label>Event Type: <b>Nap</b> </Form.Label>
-                      <br></br>
-                      <Form.Label>Start Time</Form.Label>
-                      <Form.Control type="datetime-local" name='start_time' defaultValue={nowTimeValue} />
+                </Modal.Footer>
+              </Form>
+            </Modal>
 
 
-                      <Form.Label>Duration: <b>{napTimeHrsValue}</b> hours <b>{napTimeMinsValue}</b> minutes</Form.Label>
-                      <br></br>
-
-
-                      <Form.Label>Hours</Form.Label>
-                      <Form.Control
-                        type="range"
-                        name='ev_hours'
-                        min={0}
-                        max={12}
-                        step={1}
-                        defaultValue={napTimeHrsValue}
-                        onChange={changeEvent => setNapTimeHrsValue(changeEvent.target.value)} />
-
-                      <Form.Label>Minutes</Form.Label>
-                      <Form.Control
-                        type="range"
-                        name='ev_mins'
-                        min={0}
-                        max={59}
-                        step={10}
-                        defaultValue={napTimeMinsValue}
-                        onChange={changeEvent => setNapTimeMinsValue(changeEvent.target.value)} />
-
-                      <Form.Label>Notes</Form.Label>
-                      <Form.Control as="textarea" name='notes' rows={3} />
-                    </Form.Group>
-
-
-
-
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseNap}>
-                      Close
+            <Modal show={showEditNap} onHide={handleCloseEditNap} animation={false} backdrop="static">
+              <Form noValidate onSubmit={handleSaveEditNap}>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput1Edit">
+                    <Form.Label>Event Type: <b>(Edit) Nap</b> </Form.Label>
+                    <Form.Control plaintext readOnly name='ev_id' defaultValue={edNapIdValue} />
+                    <Button variant="danger" onClick={handleDeleteNap}>
+                      Delete Event
                     </Button>
-                    <Button type="submit" variant="primary">
-                      Save Changes
-                    </Button>
+                    <br></br>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="datetime-local" name='start_time' defaultValue={edNapStartTimeValue} />
 
-                  </Modal.Footer>
-                </Form>
-              </Modal>
+                    <Form.Label>Duration: <b>{edNapTimeHrsValue}</b> hours <b>{edNapTimeMinsValue}</b> minutes</Form.Label>
+                    <br></br>
+                    <Form.Label>Hours</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_hours'
+                      min={0}
+                      max={12}
+                      step={1}
+                      defaultValue={edNapTimeHrsValue}
+                      onChange={changeEvent => setEdNapTimeHrsValue(changeEvent.target.value)} />
 
+                    <Form.Label>Minutes</Form.Label>
+                    <Form.Control
+                      type="range"
+                      name='ev_mins'
+                      min={0}
+                      max={59}
+                      step={10}
+                      defaultValue={edNapTimeMinsValue}
+                      onChange={changeEvent => setEdNapTimeMinsValue(changeEvent.target.value)} />
 
-              <Modal show={showEditNap} onHide={handleCloseEditNap} animation={false} backdrop="static">
-                <Form noValidate onSubmit={handleSaveEditNap}>
-                  <Modal.Body>
-                    <Form.Group controlId="exampleForm.ControlInput1Edit">
-                      <Form.Label>Event Type: <b>(Edit) Nap</b> </Form.Label>
-                      <Form.Control plaintext readOnly name='ev_id' defaultValue={edNapIdValue} />
-                      <Button variant="danger" onClick={handleDeleteNap}>
-                        Delete Event
-                      </Button>
-                      <br></br>
-                      <Form.Label>Start Time</Form.Label>
-                      <Form.Control type="datetime-local" name='start_time' defaultValue={edNapStartTimeValue} />
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Control as="textarea" name='notes' rows={3} defaultValue={edNapNotesValue} onChange={changeEvent => setEdNapNotesValue(changeEvent.target.value)} />
+                  </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseEditNap}>
+                    Close
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            </Modal>
+          </Container>
 
-                      <Form.Label>Duration: <b>{edNapTimeHrsValue}</b> hours <b>{edNapTimeMinsValue}</b> minutes</Form.Label>
-                      <br></br>
-                      <Form.Label>Hours</Form.Label>
-                      <Form.Control
-                        type="range"
-                        name='ev_hours'
-                        min={0}
-                        max={12}
-                        step={1}
-                        defaultValue={edNapTimeHrsValue}
-                        onChange={changeEvent => setEdNapTimeHrsValue(changeEvent.target.value)} />
+          <Container>
 
-                      <Form.Label>Minutes</Form.Label>
-                      <Form.Control
-                        type="range"
-                        name='ev_mins'
-                        min={0}
-                        max={59}
-                        step={10}
-                        defaultValue={edNapTimeMinsValue}
-                        onChange={changeEvent => setEdNapTimeMinsValue(changeEvent.target.value)} />
-
-                      <Form.Label>Notes</Form.Label>
-                      <Form.Control as="textarea" name='notes' rows={3} defaultValue={edNapNotesValue} onChange={changeEvent => setEdNapNotesValue(changeEvent.target.value)} />
-                    </Form.Group>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseEditNap}>
-                      Close
-                    </Button>
-                    <Button type="submit" variant="primary">
-                      Save Changes
-                    </Button>
-                  </Modal.Footer>
-                </Form>
-              </Modal>
-            </Container>
-
-          </div>
-
-          <div>
-            <button class="button-food" onClick={handleShowFood}>
-              Food
-            </button>
             <Modal show={showFood} onHide={handleCloseFood}>
 
               <Form noValidate onSubmit={handleSaveFood}>
@@ -1115,13 +1103,11 @@ function App() {
               </Form>
             </Modal>
 
-          </div>
+          </Container>
 
 
-          <div>
-            <button class="button-water" onClick={handleShowWater}>
-              Water
-            </button>
+          <Container>
+
 
             <Modal show={showWater} onHide={handleCloseWater}>
 
@@ -1207,13 +1193,10 @@ function App() {
               </Form>
             </Modal>
 
-          </div>
+          </Container>
 
+          <Container>
 
-          <div>
-            <button class="button-acc" onClick={handleShowAccdnt}>
-              Accident
-            </button>
             <Modal show={showAccdnt} onHide={handleCloseAccdnt}>
 
               <Form noValidate onSubmit={handleSaveAccdnt}>
@@ -1295,12 +1278,10 @@ function App() {
               </Form>
             </Modal>
 
-          </div>
+          </Container>
 
-          <div>
-            <button class="button-poop" onClick={handleShowPoop}>
-              Poop
-            </button>
+          <Container>
+
 
             <Modal show={showPoop} onHide={handleClosePoop}>
 
@@ -1387,12 +1368,11 @@ function App() {
               </Form>
             </Modal>
 
-          </div>
 
-          <div>
-            <button class="button-pee" onClick={handleShowPee}>
-              Pee
-            </button>
+          </Container>
+
+          <Container>
+
 
             <Modal show={showPee} onHide={handleClosePee}>
 
@@ -1480,6 +1460,48 @@ function App() {
               </Form>
             </Modal>
 
+          </Container>
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <footer>
+          <div class="footerActions">
+            <Button variant="dgevents" onClick={handleShowNap}>
+              Nap
+            </Button >
+
+            <Button variant="dgevents" onClick={handleShowFood}>
+              Food
+            </Button>
+
+
+
+            <Button variant="dgevents" onClick={handleShowWater}>
+              Water
+            </Button>
+
+            <Button variant="dgevents" onClick={handleShowAccdnt}>
+              Accident
+            </Button>
+
+
+            <Button variant="dgevents" onClick={handleShowPoop}>
+              Poop
+            </Button>
+
+            <Button variant="dgevents" onClick={handleShowPee}>
+              Pee
+            </Button>
+
+
           </div>
 
         </footer>
@@ -1557,25 +1579,25 @@ function fmtTimeAgo(dObj) {
   if (dObj.minutes <= 1) {
     var secsAll = Math.floor(dObj.seconds);
 
-    s = `${secsAll} seconds ago`;
+    s = `${secsAll}s ago`;
   }
   else if (dObj.hours <= 1) {
     var minsAll = Math.floor(dObj.minutes);
 
-    s = `${minsAll} minutes ago`;
+    s = `${minsAll}m ago`;
   }
-  else if (dObj.days <= 1) {
+  else if (dObj.days < 1) {
     var hrs = Math.floor(dObj.hours);
-    // var minsAll = Math.floor(dObj.minutes);
-    // var minsLeft = minsAll - hrs * 60;
-    // s = `${hrs} hours ${minsLeft} minutes ago`;
+    var minsAll = Math.floor(dObj.minutes);
+    var minsLeft = minsAll - hrs * 60;
+    s = `${hrs}h${minsLeft}m ago`;
 
     // just do hours ago 
-    s = `${hrs} hours ago`;
+    // s = `${hrs} hours ago`;
 
 
   }
-  else if (dObj.days > 1) {
+  else if (dObj.days >= 1) {
     // var hrs = Math.floor(dObj.hours);
     // var minsAll = Math.floor(dObj.minutes);
     // var minsLeft = minsAll - hrs * 60;
