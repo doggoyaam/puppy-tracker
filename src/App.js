@@ -1845,7 +1845,7 @@ function TimeLine() {
                 <h4 class="timeline-title"><span class="badge" data-key={item.id} onClick={handleClickCard}>Nap</span></h4>
                 <p>{item.note}</p>
 
-                <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock /> </div>
+                <div class="timeline-subtitle">{clockEvTime} <TimeAgoBlock onClick={(e) => console.log("Clicked on timeago nap", e)} /> </div>
 
               </div>
             </div >
@@ -1991,17 +1991,33 @@ function TimeLine() {
 
 
   // const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
+  const filterTitle = "🕓";
+
+  const FilterBtn = styled.div`
+    &:before {
+        font-weight: 300;
+        font-size: 13px;
+        content: '${filterTitle}';
+        display: block;
+        position: relative;
+        top:-28px;
+        right:-64px;
+    }
+  `;
 
 
 
 
   var hmShow2 = (<>
-    <div class="timelineblur">
+    <div class="tbcontainer">
+      <div class="timelineblur">
 
-      <h3>Updates</h3>
+        <div class="updates">Updates <FilterBtn /></div>
 
-      <div class="timeline">
-        {hmShow3Comp}
+        <div class="timeline">
+          {hmShow3Comp}
+        </div>
+
       </div>
 
     </div>
