@@ -36,3 +36,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.calendarHeatmapLabels {
+  color: blue;
+  position: sticky;
+  position: -webkit-sticky;
+}

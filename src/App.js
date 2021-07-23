@@ -17,7 +17,7 @@ import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 // use custom calanderheatmap component
-import CalendarHeatmap from './calendar-heatmap.component'
+import CalendarHeatmap from './calendar-heatmap.component';
 import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
 import styled from 'styled-components'
@@ -204,19 +204,7 @@ function App() {
   const [showPoop, setShowPoop] = useState(false);
   const [showPee, setShowPee] = useState(false);
 
-  // const {
-  //   edNapIdValue,
-  //   setEdNapIdValue,
-  //   edNapStartTimeValue,
-  //   setEdNapStartTimeValue,
-  //   edNapTimeHrsValue,
-  //   setEdNapTimeHrsValue,
-  //   edNapTimeMinsValue,
-  //   setEdNapTimeMinsValue,
-  //   edNapNotesValue,
-  //   setEdNapNotesValue,
-  //   showEditNap,
-  //   setShowEditNap } = useBetween(useShareableState);
+
 
   const {
     edNapIdValue,

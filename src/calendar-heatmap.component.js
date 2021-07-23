@@ -4,6 +4,7 @@ import moment from 'moment'
 import * as d3 from 'd3'
 
 import styles from './calendar-heatmap.css'
+import { zoomTransform } from 'd3'
 
 class CalendarHeatmap extends React.Component {
 
@@ -23,6 +24,7 @@ class CalendarHeatmap extends React.Component {
       tooltip_padding: 15,
     }
 
+    // this.zoomState = null;
     this.in_transition = false
     this.overview = this.props.overview
     this.history = ['global']
@@ -30,6 +32,10 @@ class CalendarHeatmap extends React.Component {
 
     this.calcDimensions = this.calcDimensions.bind(this)
   }
+
+  state = {
+    zoomState: null
+  };
 
   componentDidMount() {
     this.createElements()
@@ -54,9 +60,14 @@ class CalendarHeatmap extends React.Component {
       .append('svg')
       .attr('class', 'svg')
 
+    // this.g = this.svg.append("g");
+
+
+
     // Create other svg elements
     this.items = this.svg.append('g')
     this.labels = this.svg.append('g')
+    this.labelsYAx = this.svg.append('g')
     this.buttons = this.svg.append('g')
 
     // Add tooltip to the same element as main svg
@@ -1327,6 +1338,8 @@ class CalendarHeatmap extends React.Component {
     //   return project.name
     // })
 
+    // scale for yaxis event labels
+
     let project_labels = [
       "Nap",
       "Food",
@@ -1339,9 +1352,49 @@ class CalendarHeatmap extends React.Component {
       .rangeRound([this.settings.label_padding, this.settings.height])
       .domain(project_labels)
 
+    // scale for individual item blocks
     let itemScale = d3.scaleTime()
       .range([this.settings.label_padding * 2, this.settings.width])
       .domain([moment(this.selected.date).startOf('day'), moment(this.selected.date).endOf('day')])
+
+    // scale for x axis hh:mm labels on
+    let timeLabels = d3.timeHours(
+      moment(this.selected.date).startOf('day'),
+      moment(this.selected.date).endOf('day')
+    )
+    let timeScale = d3.scaleTime()
+      .range([this.settings.label_padding * 2, this.settings.width])
+      .domain([0, timeLabels.length])
+
+    // check if being zoomed and scale acordingly
+    if (this.state.zoomState !== null) {
+      console.log("got zoom state");
+      const cZoomState = this.state.zoomState;
+
+      // rescale xaxis labels
+      const newXTimeScale = cZoomState.rescaleX(timeScale);
+      timeScale.domain(newXTimeScale.domain());
+
+      // rescale yaxis labels?
+      // const newYBandScale = cZoomState.translate(c);
+      // console.log(newYBandScale);
+      // projectScale.domain(newYBandScale.domain());
+
+      // rescale items
+      const newItemScale = cZoomState.rescaleX(itemScale);
+      console.log("new scale", newItemScale);
+      itemScale.domain(newItemScale.domain());
+    }
+
+
+    // Axis labels
+    // this.svg
+    //   .append("g")
+    //   .attr("transform", `translate(50,0)`)      // This controls the vertical position of the Axis
+    //   .call(d3.axisLeft(projectScale));
+
+
+
     this.items.selectAll('.item-block').remove()
     this.items.selectAll('.item-block')
       .data(this.selected.details)
@@ -1387,7 +1440,7 @@ class CalendarHeatmap extends React.Component {
         }
 
       })
-      .style('opacity', 0)
+      .style('opacity', 1)
       .on('mouseover', d => {
         if (this.in_transition) { return }
 
@@ -1430,7 +1483,7 @@ class CalendarHeatmap extends React.Component {
         return this.settings.transition_duration
       })
       .ease(d3.easeLinear)
-      .style('opacity', 0.5)
+      .style('opacity', 1)
       .call((transition, callback) => {
         if (transition.empty()) {
           callback()
@@ -1448,13 +1501,8 @@ class CalendarHeatmap extends React.Component {
       })
 
     // Add time labels
-    let timeLabels = d3.timeHours(
-      moment(this.selected.date).startOf('day'),
-      moment(this.selected.date).endOf('day')
-    )
-    let timeScale = d3.scaleTime()
-      .range([this.settings.label_padding * 2, this.settings.width])
-      .domain([0, timeLabels.length])
+
+
     this.labels.selectAll('.label-time').remove()
     this.labels.selectAll('.label-time')
       .data(timeLabels)
@@ -1494,13 +1542,13 @@ class CalendarHeatmap extends React.Component {
           .transition()
           .duration(this.settings.transition_duration)
           .ease(d3.easeLinear)
-          .style('opacity', 0.5)
+          .style('opacity', 1)
       })
 
     // Add project labels
     let label_padding = this.settings.label_padding
-    this.labels.selectAll('.label-project').remove()
-    this.labels.selectAll('.label-project')
+    this.labelsYAx.selectAll('.label-project').remove()
+    this.labelsYAx.selectAll('.label-project')
       .data(project_labels)
       .enter()
       .append('text')
@@ -1514,7 +1562,7 @@ class CalendarHeatmap extends React.Component {
       .attr('min-height', () => {
         return projectScale.bandwidth()
       })
-      .style('text-anchor', 'left')
+      // .style('text-anchor', 'left')
       .attr('font-size', () => {
         return Math.floor(this.settings.label_padding / 3) + 'px'
       })
@@ -1547,8 +1595,110 @@ class CalendarHeatmap extends React.Component {
           .transition()
           .duration(this.settings.transition_duration)
           .ease(d3.easeLinear)
-          .style('opacity', 0.5)
-      })
+          .style('opacity', 1)
+      });
+
+
+
+    // zoom
+    // disable zoom in/out behaviour 
+    // only enable translate on xaxis
+
+    d3.select("#ch-warpper").call(d3.zoom()
+      .scaleExtent([1, 1])
+      .translateExtent([
+        [0, 0],
+        [this.settings.width + 400, this.settings.height],
+      ])
+      .on("zoom", () => {
+        console.log("Zoomed");
+        // // d3.select("#ch-warpper").attr("transform", d3.event.transform);
+        const zoomState = zoomTransform(d3.select("#ch-warpper").node());
+        console.log(zoomState);
+        console.log(d3.event);
+        // this.labelsYAx.selectAll('.label-project')
+        //   .style('fill', 'rgb(0, 255, 0)')
+        //   // .attr('position', 'sticky')
+        //   // .style("left", (scrollEvt.layerX) + "px")
+        //   // .attr('x', this.settings.gutter)
+        //   .attr('x', () => {
+        //     // console.log(timeScale(0));
+        //     // console.log(d.value);
+        //     return zoomState.x;
+        //   })
+
+        this.labels.selectAll('.label-time')
+          // Woah! The transform is the translate!
+          .attr("transform", "translate(" + d3.event.transform.x + "," + 0 + ")")
+
+
+        this.items.selectAll('.item-block')
+          .attr("transform", "translate(" + d3.event.transform.x + "," + 0 + ")")
+      }));
+
+    // this.svg.call(d3.zoom()
+    //   .scaleExtent([0.5, 5])
+    //   .translateExtent([
+    //     [0, 0],
+    //     [this.settings.width, this.settings.height],
+    //   ])
+    //   .on("zoom", () => {
+    //     console.log("Zoomed");
+    //     const zoomState = zoomTransform(this.svg.node());
+    //     // console.log(zoomState);
+
+    //     // store zoom state so we can update component
+    //     this.setState({ zoomState: zoomState });
+    //     // this.svg.attr("transform", d3.event.transform);
+    //   }));
+
+
+
+
+
+
+    // Try sticky labels on scroll
+
+    // bugTofix: only works when scroll on heatmap
+    // d3.select('#calendar-heatmap')
+    //   .on('mousewheel.scroll', () => {
+
+    //     // how to access scroll event data
+    //     let scrollEvt = d3.event;
+    //     console.log(scrollEvt.wheelDeltaX);
+    //     console.log("x", scrollEvt.x);
+    //     console.log("pagex", scrollEvt.pageX);
+    //     console.log("layerx", scrollEvt.layerX);
+    //     console.log("offsetx", scrollEvt.offsetX);
+    //     console.log("screenx", scrollEvt.screenX);
+    //     console.log("screenx", scrollEvt.screenX);
+    //     // console.log(scrollEvt);
+    //     const cont = this.container;
+    //     console.log(cont);
+    //     console.log("offsetLeft", cont.offsetLeft);
+    //     console.log("offsetWidth", cont.offsetWidth);
+    //     console.log("offsetWidth", cont.x);
+    //     if (scrollEvt.wheelDeltaX < 0) {
+    //       console.log('scroll to right');
+    //       this.labels.selectAll('.label-project')
+    //         .style('fill', 'rgb(0, 255, 0)')
+    //         // .attr('position', 'sticky')
+    //         // .style("left", (scrollEvt.layerX) + "px")
+    //         // .attr('x', this.settings.gutter)
+    //         .attr('x', () => {
+    //           console.log(timeScale(0));
+    //           // console.log(d.value);
+    //           return (scrollEvt.layerX) + "px"
+    //         })
+
+    //     } else {
+    //       console.log('scroll to left');
+
+
+    //     }
+
+
+    //   });
 
     // Add button to switch back to previous overview
     // dont draw button
@@ -1748,9 +1898,12 @@ class CalendarHeatmap extends React.Component {
 
   render() {
     return (
-      <div id='calendar-heatmap'
-        className={styles.calendarHeatmap}
-        ref={elem => { this.container = elem }}>
+      <div id='ch-warpper'>
+        <div id='calendar-heatmap'
+          className={styles.calendarHeatmap}
+          ref={elem => { this.container = elem }}>
+        </div>
+
       </div>
     )
   }
