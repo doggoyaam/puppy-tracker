@@ -100,6 +100,13 @@ const useShareableState = () => {
   const [edPeeNotesValue, setEdPeeNotesValue] = useState("");
   const [showEditPee, setShowEditPee] = useState(false);
 
+
+  // Filter state
+  const [showFilterEvents, setShowFilterEvents] = useState(false);
+  const [filterStartTimeValue, setfilterStartTimeValue] = useState(null);
+
+
+
   // const [count, setCount] = useState(0);
   return {
     edNapIdValue,
@@ -168,7 +175,12 @@ const useShareableState = () => {
     edPeeNotesValue,
     setEdPeeNotesValue,
     showEditPee,
-    setShowEditPee
+    setShowEditPee,
+
+    showFilterEvents,
+    setShowFilterEvents,
+    filterStartTimeValue,
+    setfilterStartTimeValue
   }
 }
 
@@ -273,7 +285,12 @@ function App() {
     edPeeNotesValue,
     setEdPeeNotesValue,
     showEditPee,
-    setShowEditPee
+    setShowEditPee,
+
+    showFilterEvents,
+    setShowFilterEvents,
+    filterStartTimeValue,
+    setfilterStartTimeValue
   } = useBetween(useShareableState);
 
 
@@ -315,6 +332,8 @@ function App() {
 
   const handleCloseWater = () => setShowWater(false);
   const handleCloseEditWater = () => setShowEditWater(false);
+
+  const handleCloseFilterEvents = () => setShowFilterEvents(false);
 
 
 
@@ -808,6 +827,45 @@ function App() {
   };
 
 
+  const handleSaveFilter = (e) => {
+    e.preventDefault();
+
+    console.log("Applying filter");
+    const formData = new FormData(e.target),
+      formDataObj = Object.fromEntries(formData.entries());
+    console.log(formDataObj);
+    // const evId = edPeeIdValue;
+    const stTime = formDataObj.start_time;
+    if (stTime !== "") {
+      console.log("Got start time for filter", stTime);
+      setfilterStartTimeValue(stTime);
+
+    } else {
+      console.log("No start time for filter", stTime);
+
+    }
+
+    setShowFilterEvents(false);
+
+
+    return true;
+
+  }
+
+  const handleClearFilter = (e) => {
+    e.preventDefault();
+
+    console.log("Clearing filter");
+    setfilterStartTimeValue(null);
+
+    setShowFilterEvents(false);
+
+
+    return true;
+
+  }
+
+
   const showAboutMsg = (e) => {
     e.preventDefault();
     const cHeadState = showAbout;
@@ -820,6 +878,8 @@ function App() {
     }
 
   }
+
+
 
 
 
@@ -1460,6 +1520,35 @@ function App() {
               </Form>
             </Modal>
 
+
+
+            <Modal show={showFilterEvents} onHide={handleCloseFilterEvents} animation={false} backdrop="static">
+              <Form noValidate onSubmit={handleSaveFilter}>
+                <Modal.Header>
+                  Filter Events
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Group controlId="exampleForm.ControlInput1Edit7">
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Control type="date" name='start_time' defaultValue={filterStartTimeValue} />
+
+
+                  </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseFilterEvents}>
+                    Close
+                  </Button>
+                  <Button variant="danger" onClick={handleClearFilter}>
+                    Clear Filter
+                  </Button>
+                  <Button type="submit" variant="primary">
+                    Apply Filter
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            </Modal>
+
           </Container>
 
 
@@ -1681,12 +1770,39 @@ function TimeLine() {
     edPeeNotesValue,
     setEdPeeNotesValue,
     showEditPee,
-    setShowEditPee
+    setShowEditPee,
+
+    showFilterEvents,
+    setShowFilterEvents,
+    filterStartTimeValue,
+    setfilterStartTimeValue
   } = useBetween(useShareableState);
 
   const dgevents = firestore.collection(evCollectionName);
 
-  const query = dgevents.orderBy('start_time', 'desc').limit(20);
+  var query;
+
+  if (filterStartTimeValue === null) {
+    console.log("no filter value");
+    // default qquery
+    query = dgevents.orderBy('start_time', 'desc').limit(30);
+  } else {
+    console.log("Got filter val", filterStartTimeValue);
+
+    var start = new Date(filterStartTimeValue);
+    start.setHours(0, 0, 0, 0);
+
+    var end = new Date(filterStartTimeValue);
+    end.setHours(23, 59, 59, 999);
+
+    query = dgevents.where('start_time', ">=", start)
+      .where('start_time', "<", end)
+      .orderBy('start_time', 'desc');
+
+  }
+
+
+
   const [devents] = useCollectionData(query, { idField: 'id' });
   // console.log(devents);
 
@@ -1771,6 +1887,15 @@ function TimeLine() {
 
 
     handleShowEditEventWrapper(dataKey);
+  }
+
+  const handleClickFilter = (e) => {
+    console.log("Clicked filter emoji");
+    // console.log(e);
+    // const dataKey = e.target.getAttribute("data-key");
+
+
+    setShowFilterEvents(true);
   }
 
 
@@ -2012,7 +2137,7 @@ function TimeLine() {
     <div class="tbcontainer">
       <div class="timelineblur">
 
-        <div class="updates">Updates <FilterBtn /></div>
+        <div class="updates">Updates <FilterBtn onClick={handleClickFilter} /></div>
 
         <div class="timeline">
           {hmShow3Comp}
@@ -2122,8 +2247,8 @@ function TrackerView() {
 
   const query = dgevents.where('start_time', ">=", start)
     .where('start_time', "<", end)
-    .orderBy('start_time', 'desc')
-    .limit(25);
+    .orderBy('start_time', 'desc');
+  // .limit(25);
   const [devents] = useCollectionData(query, { idField: 'id' });
 
 
