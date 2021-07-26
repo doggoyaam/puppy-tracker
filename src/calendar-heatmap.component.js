@@ -69,6 +69,8 @@ class CalendarHeatmap extends React.Component {
     this.labels = this.svg.append('g')
     this.labelsYAx = this.svg.append('g')
     this.buttons = this.svg.append('g')
+    // Try add line to disp time between events on a track
+    this.lines = this.svg.append('g');
 
     // Add tooltip to the same element as main svg
     this.tooltip = d3.select('#calendar-heatmap')
@@ -1597,6 +1599,62 @@ class CalendarHeatmap extends React.Component {
           .ease(d3.easeLinear)
           .style('opacity', 1)
       });
+
+
+    // Try draw lines
+
+    this.lines.selectAll('.label-project-line').remove()
+    this.lines.selectAll('.label-project-line')
+      .data(this.selected.details)
+      .enter()
+      .append('line')
+      .attr('class', 'label label-project-line')
+      .attr('stroke', 'red')
+      .attr('x1', (d, i) => {
+        return itemScale(moment(d.date))
+      })
+      .attr('x2', (d, i) => {
+        console.log("x2", d, i);
+        let eventDates = [];
+        this.selected.details.forEach((val, indx) => {
+          // only return dates for this event type
+          if (val.name === d.name) {
+            eventDates.push(val.date);
+
+          }
+        });
+        // Get the next date of this event
+        let now = new Date(d.date);
+
+        let closest = Infinity;
+
+        eventDates.forEach(function (dt) {
+          let date = new Date(dt);
+
+          if (date > now && (date < new Date(closest) || date < closest)) {
+            closest = dt;
+          }
+        });
+        console.log("details", eventDates)
+        // if we got inf as closes date, ignore
+        if (closest === Infinity) {
+          console.log("No closest date");
+          return itemScale(moment(d.date))
+
+        } else {
+          console.log("Closest", closest);
+          return itemScale(moment(closest))
+
+        }
+
+
+      })
+      .attr('y1', d => {
+        return (projectScale(d.name) + projectScale.bandwidth() / 2) - 5
+      })
+      .attr('y2', d => {
+        return (projectScale(d.name) + projectScale.bandwidth() / 2) - 5
+      })
 
 
 
