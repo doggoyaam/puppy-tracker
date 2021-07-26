@@ -54,6 +54,76 @@ class CalendarHeatmap extends React.Component {
     window.removeEventListener('resize', this.calcDimensions)
   }
 
+
+
+  // a and b are javascript Date objects
+  dateDiffs(a, b) {
+    console.log(a, b);
+    const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+    const _ms_to_sec = 1000;
+    const _ms_to_min = 1000 * 60;
+    const _ms_to_hour = 1000 * 60 * 60;
+
+    // Discard the time and time-zone information.
+    // const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    // const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    const d = Math.abs(b - a);
+    console.log(d);
+
+    const secs = d / _ms_to_sec;
+    const mins = d / _ms_to_min;
+    const hours = d / _ms_to_hour;
+    const days = Math.floor(d / _MS_PER_DAY);
+    console.log(secs, mins, hours, days);
+
+    const ret = {
+      seconds: secs,
+      minutes: mins,
+      hours: hours,
+      days: days
+    }
+    return ret;
+
+    // return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+  }
+
+
+  fmtTimeToNextEvent(dObj) {
+    var s = null;
+
+    if (dObj.minutes <= 1) {
+      var secsAll = Math.floor(dObj.seconds);
+
+      s = `${secsAll}s`;
+    }
+    else if (dObj.hours <= 1) {
+      var minsAll = Math.floor(dObj.minutes);
+
+      s = `${minsAll}m`;
+    }
+    else if (dObj.days < 1) {
+      var hrs = Math.floor(dObj.hours);
+      var minsAll = Math.floor(dObj.minutes);
+      var minsLeft = minsAll - hrs * 60;
+      s = `${hrs}h${minsLeft}m`;
+
+      // just do hours 
+      // s = `${hrs} hours`;
+
+
+    }
+    else if (dObj.days >= 1) {
+      // var hrs = Math.floor(dObj.hours);
+      // var minsAll = Math.floor(dObj.minutes);
+      // var minsLeft = minsAll - hrs * 60;
+      s = `${dObj.days} days`;
+
+    }
+    return s;
+
+  }
+
+
   createElements() {
     // Create svg element
     this.svg = d3.select('#calendar-heatmap')
@@ -71,6 +141,7 @@ class CalendarHeatmap extends React.Component {
     this.buttons = this.svg.append('g')
     // Try add line to disp time between events on a track
     this.lines = this.svg.append('g');
+    this.linesLabels = this.svg.append('g');
 
     // Add tooltip to the same element as main svg
     this.tooltip = d3.select('#calendar-heatmap')
@@ -1602,7 +1673,6 @@ class CalendarHeatmap extends React.Component {
 
 
     // Try draw lines
-
     this.lines.selectAll('.label-project-line').remove()
     this.lines.selectAll('.label-project-line')
       .data(this.selected.details)
@@ -1644,10 +1714,7 @@ class CalendarHeatmap extends React.Component {
         } else {
           console.log("Closest", closest);
           return itemScale(moment(closest))
-
         }
-
-
       })
       .attr('y1', d => {
         return (projectScale(d.name) + projectScale.bandwidth() / 2) - 5
@@ -1656,6 +1723,67 @@ class CalendarHeatmap extends React.Component {
         return (projectScale(d.name) + projectScale.bandwidth() / 2) - 5
       })
 
+
+    // Try draw labels on lines
+    // do disp time between events
+    this.lines.selectAll('.label-project-line-label').remove()
+    this.lines.selectAll('.label-project-line-label')
+      .data(this.selected.details)
+      .enter()
+      .append('text')
+      .attr('class', 'label label-project-line-label')
+      .style('fill', 'rgb(0, 0, 0)')
+      .attr('x', (d, i) => {
+        return itemScale(moment(d.date))
+      })
+      .attr('y', d => {
+        return (projectScale(d.name) + projectScale.bandwidth() / 2) - 5
+      })
+      .attr('min-height', () => {
+        return projectScale.bandwidth()
+      })
+      // .style('text-anchor', 'left')
+      .attr('font-size', () => {
+        return Math.floor(this.settings.label_padding / 3) + 'px'
+      })
+      .text(d => {
+        console.log(d);
+        let eventDates = [];
+        this.selected.details.forEach((val, indx) => {
+          // only return dates for this event type
+          if (val.name === d.name) {
+            eventDates.push(val.date);
+
+          }
+        });
+        // Get the next date of this event
+        let now = new Date(d.date);
+
+        let closest = Infinity;
+
+        eventDates.forEach(function (dt) {
+          let date = new Date(dt);
+
+          if (date > now && (date < new Date(closest) || date < closest)) {
+            closest = date;
+          }
+        });
+        console.log("details", eventDates)
+        // if we got inf as closes date, ignore
+        if (closest === Infinity) {
+          console.log("No closest date");
+          return ""
+
+        } else {
+          console.log("Closest", closest);
+          const dd = this.dateDiffs(closest, now);
+          console.log("diff", dd)
+          const timeNxt = this.fmtTimeToNextEvent(dd);
+          console.log("diff", timeNxt);
+
+          return timeNxt
+        }
+      });
 
 
     // zoom
@@ -1686,6 +1814,15 @@ class CalendarHeatmap extends React.Component {
         //   })
 
         this.labels.selectAll('.label-time')
+          // Woah! The transform is the translate!
+          .attr("transform", "translate(" + (d3.event.transform.x) + "," + 0 + ")")
+
+        this.lines.selectAll('.label-project-line')
+          // Woah! The transform is the translate!
+          .attr("transform", "translate(" + (d3.event.transform.x) + "," + 0 + ")")
+
+
+        this.lines.selectAll('.label-project-line-label')
           // Woah! The transform is the translate!
           .attr("transform", "translate(" + (d3.event.transform.x) + "," + 0 + ")")
 
