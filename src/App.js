@@ -2234,14 +2234,19 @@ function TrackerView() {
   // var end = moment().endOf('day'); // set to 23:59 pm today
 
   var start = new Date(nowDateValue);
+  start.setMinutes(start.getMinutes() - start.getTimezoneOffset());
+
   start.setHours(0, 0, 0, 0);
 
-  var end = new Date();
+  var end = new Date(nowDateValue);
+  end.setMinutes(end.getMinutes() - end.getTimezoneOffset());
+
   end.setHours(23, 59, 59, 999);
   if (nowDateValue == null) {
     console.log("Empty nowday")
   }
   else {
+    console.log("Start", start, "end", end);
 
   }
 
@@ -2257,7 +2262,7 @@ function TrackerView() {
   var dateArr = getDates(3);
   console.log("Got dates", dateArr);
 
-  console.log("events:", devents);
+  // console.log("events:", devents);
   // console.log(d0events);
   // return null;
 
@@ -2342,7 +2347,7 @@ function EventTrack(props) {
   // init the template data
   // will be same for all traces
 
-  var trackDataAll = [];
+  let trackDataAll = [];
 
   if (trackData == null) {
     console.log("No events");
@@ -2356,7 +2361,8 @@ function EventTrack(props) {
   }
   else {
     var a = _.groupBy(trackData, function (n) {
-      return n.create_date;
+      // return n.create_date;
+      return moment(n.start_time.toDate()).format('YYYY-MM-DD')
     });
     console.log(a)
     console.log(typeof (a))
