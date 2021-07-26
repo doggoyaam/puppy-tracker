@@ -21,7 +21,6 @@ import CalendarHeatmap from './calendar-heatmap.component';
 import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
 import styled from 'styled-components'
-import { isCompositeComponent } from 'react-dom/cjs/react-dom-test-utils.production.min';
 
 
 if (!firebase.apps.length) {
@@ -376,8 +375,8 @@ function App() {
       var napMins = parseInt(evData.ev_mins);
 
       var durationSec = (napHours * 60 * 60) + (napMins * 60);
-      console.log(napHours, napMins);
-      console.log("duration:", durationSec);
+      // console.log(napHours, napMins);
+      // console.log("duration:", durationSec);
 
 
       await dgevents.add({
@@ -406,7 +405,7 @@ function App() {
       var evMins = parseInt(evData.ev_mins);
 
       let durationSec = evMins * 60;
-      console.log("duration:", durationSec);
+      // console.log("duration:", durationSec);
 
 
 
@@ -443,12 +442,12 @@ function App() {
       var napMins = parseInt(evData.ev_mins);
 
       var durationSec = (napHours * 60 * 60) + (napMins * 60);
-      console.log(napHours, napMins);
-      console.log("duration:", durationSec);
+      // console.log(napHours, napMins);
+      // console.log("duration:", durationSec);
 
       // get event id
       let evId = evData.ev_id;
-      console.log("event id", evId);
+      // console.log("event id", evId);
 
       await dgevents.doc(evId).update({
         start_time: stDt,
@@ -469,11 +468,11 @@ function App() {
       var evMins = parseInt(evData.ev_mins);
 
       let durationSec = evMins * 60;
-      console.log("duration:", durationSec);
+      // console.log("duration:", durationSec);
 
       // get event id
       let evId = evData.ev_id;
-      console.log("event id", evId);
+      // console.log("event id", evId);
 
       await dgevents.doc(evId).update({
         start_time: stDt,
@@ -514,7 +513,7 @@ function App() {
 
   const handleShowNap = () => {
     // set the time appropriately
-    console.log("Using effect show nap ndate");
+    // console.log("Using effect show nap ndate");
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     // only get to minutes
@@ -869,7 +868,7 @@ function App() {
   const showAboutMsg = (e) => {
     e.preventDefault();
     const cHeadState = showAbout;
-    console.log("Currently showing about:", cHeadState);
+    // console.log("Currently showing about:", cHeadState);
     if (cHeadState === false) {
       setShowAbout(true);
     }
@@ -894,7 +893,7 @@ function App() {
     // home is event view
     // Schedule is the Schedule heatmap view
     if (tab === "home") {
-      console.log("Shoing home tab");
+      // console.log("Shoing home tab");
       activeTabComp = (<>
         <TimeLine />
       </>
@@ -908,7 +907,7 @@ function App() {
       </>);
     }
     else if (tab === "schedule") {
-      console.log("Shoing schedule tab");
+      // console.log("Shoing schedule tab");
       activeTabComp = (<>
         <TrackerView />
       </>
@@ -1828,7 +1827,7 @@ function TimeLine() {
         .then((snap) => {
           console.log("Got snap")
           const elemData = snap.data();
-          console.log(elemData);
+          // console.log(elemData);
           const evType = elemData.type;
           const stTime = elemData.start_time; //.toDate().toISOString(0, 16);
           // Note the T
@@ -1940,8 +1939,8 @@ function TimeLine() {
         const subStr = fmtTimeAgo(dObj);
         // console.log(subStr);
         const messageClass = item.uid === auth.currentUser.uid ? 'sent' : 'received';
-        console.log(item, messageClass);
-        console.log(item.id);
+        // console.log(item, messageClass);
+        // console.log(item.id);
 
         const TimeAgoBlock = styled.div`
             &:before {
@@ -2193,7 +2192,7 @@ function getDates(numDaysBack) {
   for (var i = 0; i < numDaysBack; i++) {
     // get the date for each date to look in past
     // first item should be today
-    if (i == 0) {
+    if (i === 0) {
       var tdateString = moment(today).format('YYYY-MM-DD');
       dateArray.push(tdateString);
     }
@@ -2207,9 +2206,9 @@ function getDates(numDaysBack) {
   }
 
 
-  console.log('Today: ' + today);
+  // console.log('Today: ' + today);
   // console.log('Yesterday: ' + yesterday);
-  console.log(dateArray);
+  // console.log(dateArray);
   // var currentDate = moment(startDate);
   // var stopDate = moment(stopDate);
   // while (currentDate <= stopDate) {
@@ -2260,7 +2259,7 @@ function TrackerView() {
 
 
   var dateArr = getDates(3);
-  console.log("Got dates", dateArr);
+  // console.log("Got dates", dateArr);
 
   // console.log("events:", devents);
   // console.log(d0events);
@@ -2340,7 +2339,7 @@ function EventTrack(props) {
 
 
 
-  console.log("Got event track:", trackData);
+  // console.log("Got event track:", trackData);
   // console.log(devents);
 
   // var trDetails = [];
@@ -2365,10 +2364,10 @@ function EventTrack(props) {
       return moment(n.start_time.toDate()).format('YYYY-MM-DD')
     });
     console.log(a)
-    console.log(typeof (a))
+    // console.log(typeof (a))
     _.forEach(a, function (val, key) {
-      console.log("Key", key);
-      console.log(val);
+      // console.log("Key", key);
+      // console.log(val);
 
       var details = [];
       var total = 0;
@@ -2379,12 +2378,12 @@ function EventTrack(props) {
         var est = value['start_time'];
         var estMils = est['seconds'] * 1000
         var dtest = new Date(estMils);
-        console.log(dtest);
-        console.log(est);
+        // console.log(dtest);
+        // console.log(est);
         var tdateString = moment(est.toDate()).format('YYYY-MM-DD HH:mm:ss');
-        console.log("elem", tdateString);
-        console.log("elem", typeof (tdateString));
-        console.log(value["type"]);
+        // console.log("elem", tdateString);
+        // console.log("elem", typeof (tdateString));
+        // console.log(value["type"]);
         var d = {
           "name": value["type"],
           "date": tdateString,

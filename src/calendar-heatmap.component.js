@@ -1382,7 +1382,7 @@ class CalendarHeatmap extends React.Component {
 
       // rescale items
       const newItemScale = cZoomState.rescaleX(itemScale);
-      console.log("new scale", newItemScale);
+      // console.log("new scale", newItemScale);
       itemScale.domain(newItemScale.domain());
     }
 
@@ -1611,11 +1611,11 @@ class CalendarHeatmap extends React.Component {
         [this.settings.width + 400, this.settings.height],
       ])
       .on("zoom", () => {
-        console.log("Zoomed");
+        // console.log("Zoomed");
         // // d3.select("#ch-warpper").attr("transform", d3.event.transform);
         const zoomState = zoomTransform(d3.select("#ch-warpper").node());
-        console.log(zoomState);
-        console.log(d3.event);
+        // console.log(zoomState);
+        // console.log(d3.event);
         // this.labelsYAx.selectAll('.label-project')
         //   .style('fill', 'rgb(0, 255, 0)')
         //   // .attr('position', 'sticky')
