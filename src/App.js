@@ -18,6 +18,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 // use custom calanderheatmap component
 import CalendarHeatmap from './calendar-heatmap.component';
+import { Offline, Online } from "react-detect-offline";
 import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
 import styled from 'styled-components'
@@ -294,6 +295,8 @@ function App() {
 
 
   const [showAbout, setShowAbout] = useState(false);
+
+
 
 
 
@@ -938,6 +941,10 @@ function App() {
         <header>
           <div onClick={showAboutMsg}>
             {headComp}
+          </div>
+          <div>
+            <Online>Only shown when you're online</Online>
+            <Offline>Only shown offline (surprise!)</Offline>
           </div>
           <SignOut />
         </header>

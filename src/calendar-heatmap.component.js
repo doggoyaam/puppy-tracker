@@ -1679,7 +1679,32 @@ class CalendarHeatmap extends React.Component {
       .enter()
       .append('line')
       .attr('class', 'label label-project-line')
-      .attr('stroke', 'red')
+      // .attr('stroke', 'red')
+      .attr('stroke', (d) => {
+        // console.log(d);
+        if (d.name == null) {
+          console.log("undefined name");
+        } else {
+          if (d.name === "Nap") {
+            return "#70587c";
+          } else if (d.name === "Food") {
+            return "#3a7d44";
+          } else if (d.name === "Water") {
+            return "#62bb";
+          } else if (d.name === "Accident") {
+            return "#e40066";
+          } else if (d.name === "Poop") {
+            return "#2C2217";
+          } else if (d.name === "Pee") {
+            return "#B69873";
+          } else {
+
+            return this.props.color
+
+          }
+        }
+
+      })
       .attr('x1', (d, i) => {
         return itemScale(moment(d.date))
       })
@@ -1731,13 +1756,36 @@ class CalendarHeatmap extends React.Component {
       .data(this.selected.details)
       .enter()
       .append('text')
+      .classed('label-project-line-label', true)
       .attr('class', 'label label-project-line-label')
-      .style('fill', 'rgb(0, 0, 0)')
+      // .style('fill', 'rgb(0, 0, 0)')
       .attr('x', (d, i) => {
         return itemScale(moment(d.date))
       })
-      .attr('y', d => {
-        return (projectScale(d.name) + projectScale.bandwidth() / 2) - 5
+      .attr('y', (d, i) => {
+        // alternate ypos of label to try in increase readibility
+        // even labels on top odd on bottom 
+        // We need to group events of same type then determine even/odd based off that
+        console.log("LABELD", d);
+        let eventDetails = [];
+        this.selected.details.forEach((val, indx) => {
+          // only return dates for this event type
+          if (val.name === d.name) {
+            eventDetails.push(val.date);
+          }
+        });
+        // now use the evDetails array to find the index of this item
+        const itmIndx = eventDetails.findIndex(x => x === d.date);
+        console.log(eventDetails);
+        console.log("Found event at index", itmIndx, "For date", d.date);
+        if (itmIndx % 2 === 0) {
+          // even
+          return (projectScale(d.name) + projectScale.bandwidth() / 2) - 5
+        } else {
+          // odd
+          return (projectScale(d.name) + projectScale.bandwidth() / 2) + 5
+
+        }
       })
       .attr('min-height', () => {
         return projectScale.bandwidth()
@@ -1783,8 +1831,7 @@ class CalendarHeatmap extends React.Component {
 
           return timeNxt
         }
-      });
-
+      })
 
     // zoom
     // disable zoom in/out behaviour 

@@ -42,3 +42,16 @@
   position: sticky;
   position: -webkit-sticky;
 }
+
+.label-project-line-label {
+  color: red;
+  background-color: blue;
+  fill:black;
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 10px 0;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width: 0;
+}
