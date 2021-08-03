@@ -3,10 +3,10 @@ import * as React from 'react'
 import moment from 'moment'
 import * as d3 from 'd3'
 
-import styles from './calendar-heatmap.css'
+import styles from './calendar-heatmapcomp.css'
 import { zoomTransform } from 'd3'
 
-class CalendarHeatmap extends React.Component {
+class CalendarHeatmapComp extends React.Component {
 
   constructor(props) {
     super(props)
@@ -126,7 +126,7 @@ class CalendarHeatmap extends React.Component {
 
   createElements() {
     // Create svg element
-    this.svg = d3.select('#calendar-heatmap')
+    this.svg = d3.select('#calendar-heatmapcomp')
       .append('svg')
       .attr('class', 'svg')
 
@@ -144,7 +144,7 @@ class CalendarHeatmap extends React.Component {
     this.linesLabels = this.svg.append('g');
 
     // Add tooltip to the same element as main svg
-    this.tooltip = d3.select('#calendar-heatmap')
+    this.tooltip = d3.select('#calendar-heatmapcomp')
       .append('div')
       .attr('class', styles.heatmapTooltip)
       .style('opacity', 0)
@@ -1837,7 +1837,7 @@ class CalendarHeatmap extends React.Component {
     // disable zoom in/out behaviour 
     // only enable translate on xaxis
 
-    d3.select("#ch-warpper").call(d3.zoom()
+    d3.select("#chcomp-warpper").call(d3.zoom()
       .scaleExtent([1, 1])
       .translateExtent([
         [0, 0],
@@ -1846,7 +1846,7 @@ class CalendarHeatmap extends React.Component {
       .on("zoom", () => {
         // console.log("Zoomed");
         // // d3.select("#ch-warpper").attr("transform", d3.event.transform);
-        const zoomState = zoomTransform(d3.select("#ch-warpper").node());
+        const zoomState = zoomTransform(d3.select("#chcomp-warpper").node());
         // console.log(zoomState);
         // console.log(d3.event);
         // this.labelsYAx.selectAll('.label-project')
@@ -1973,7 +1973,7 @@ class CalendarHeatmap extends React.Component {
     // Try sticky labels on scroll
 
     // bugTofix: only works when scroll on heatmap
-    // d3.select('#calendar-heatmap')
+    // d3.select('#calendar-heatmapcomp')
     //   .on('mousewheel.scroll', () => {
 
     //     // how to access scroll event data
@@ -2211,8 +2211,8 @@ class CalendarHeatmap extends React.Component {
 
   render() {
     return (
-      <div id='ch-warpper'>
-        <div id='calendar-heatmap'
+      <div id='chcomp-warpper'>
+        <div id='calendar-heatmapcomp'
           className={styles.calendarHeatmap}
           ref={elem => { this.container = elem }}>
         </div>
@@ -2222,11 +2222,11 @@ class CalendarHeatmap extends React.Component {
   }
 }
 
-CalendarHeatmap.defaultProps = {
+CalendarHeatmapComp.defaultProps = {
   data: [],
   overview: 'year',
   color: '#ff4500',
   handler: undefined,
 }
 
-export default CalendarHeatmap
+export default CalendarHeatmapComp
