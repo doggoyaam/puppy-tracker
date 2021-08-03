@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 
-import firebaseApp from './FirebaseApp';
+import firebaseApp from './Components/FirebaseApp';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -21,11 +21,11 @@ import { Offline, Online } from "react-detect-offline";
 import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
 
-import useShareableState from './ShareableState';
-import TimeLine from './Timeline';
-import TrackerView from './TrackerView';
-import SignIn from './SignIn';
-import SignOut from './SignOut';
+import useShareableState from './Components/ShareableState';
+import TimeLine from './Components/Timeline';
+import TrackerView from './Components/TrackerView';
+import SignIn from './Components/SignIn';
+import SignOut from './Components/SignOut';
 
 const auth = firebaseApp.auth();
 const firestore = firebaseApp.firestore();

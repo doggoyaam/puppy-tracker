@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useBetween } from "use-between";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import '../App.css';
 
 
 import firebaseApp from './FirebaseApp';
@@ -19,16 +19,11 @@ import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 // use custom calanderheatmap component
-import CalendarHeatmap from './calendar-heatmap.component';
-import CalendarHeatmapComp from './calendar-heatmapcomp.component';
-import { Offline, Online } from "react-detect-offline";
 import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
-import styled from 'styled-components'
 
 import EventTrack from './EventTrack';
 import { getDates } from './utils';
-const auth = firebaseApp.auth();
 const firestore = firebaseApp.firestore();
 // const analytics = firebase.analytics();
 var _ = require('lodash');

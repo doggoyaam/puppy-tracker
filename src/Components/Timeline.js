@@ -1,7 +1,7 @@
 import React from 'react';
 import { useBetween } from "use-between";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import '../App.css';
 
 
 import firebaseApp from './FirebaseApp';
