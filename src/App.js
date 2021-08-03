@@ -5,13 +5,9 @@ import './App.css';
 
 
 import firebaseApp from './FirebaseApp';
-// import firebase from 'firebase/app';
-// import 'firebase/firestore';
-// import 'firebase/auth';
-// import 'firebase/analytics';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
 import Form from "react-bootstrap/Form";
@@ -19,12 +15,11 @@ import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 // use custom calanderheatmap component
-import CalendarHeatmap from './calendar-heatmap.component';
-import CalendarHeatmapComp from './calendar-heatmapcomp.component';
+// import CalendarHeatmap from './calendar-heatmap.component';
+// import CalendarHeatmapComp from './calendar-heatmapcomp.component';
 import { Offline, Online } from "react-detect-offline";
 import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
-import styled from 'styled-components'
 
 import useShareableState from './ShareableState';
 import TimeLine from './Timeline';
@@ -355,14 +350,8 @@ function App() {
 
 
 
-
-
-
-
   // console.log("User:", user);
   let usrLayout = null;
-
-
 
 
 
@@ -734,13 +723,8 @@ function App() {
   }
 
 
-
-
-
   var activeTabComp = null;
   var activeTabCompLabel = null;
-
-
 
 
   if (user !== null) {
@@ -1478,99 +1462,5 @@ function App() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-function EventTrackComp(props) {
-  const trackDate = props.tdate;
-  const trackData = props.tdata;
-
-
-
-  let trackDataAll = [];
-
-  if (trackData == null) {
-    console.log("No events");
-
-  }
-  else {
-    var a = _.groupBy(trackData, function (n) {
-      // return n.create_date;
-      return moment(n.start_time.toDate()).format('YYYY-MM-DD')
-    });
-    console.log(a)
-    // console.log(typeof (a))
-    _.forEach(a, function (val, key) {
-      // console.log("Key", key);
-      // console.log(val);
-
-      var details = [];
-      var total = 0;
-
-      // build up the details for this date
-      _.forEach(val, function (value) {
-
-        var est = value['start_time'];
-        var estMils = est['seconds'] * 1000
-        var dtest = new Date(estMils);
-        // console.log(dtest);
-        // console.log(est);
-        var tdateString = moment(est.toDate()).format('YYYY-MM-DD HH:mm:ss');
-        // console.log("elem", tdateString);
-        // console.log("elem", typeof (tdateString));
-        // console.log(value["type"]);
-        var d = {
-          "name": value["type"],
-          "date": tdateString,
-          "value": value["duration"]
-        };
-        details.push(d);
-        total = total + d.value;
-      });
-      console.log("details");
-      console.log(details);
-
-      var dData = {
-        "date": key,
-        "details": details,
-        "total": total
-      };
-      trackDataAll.push(dData);
-
-    });
-  }
-
-  // const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
-  // console.log(trackDataOld);
-  console.log(trackDataAll);
-  var overview = "day";
-
-  var hmShow = null;
-
-  if (trackDataAll.length > 0) {
-    hmShow = (<>
-      <CalendarHeatmapComp
-        data={trackDataAll}
-        overview={overview}
-      >
-      </CalendarHeatmapComp>
-    </>);
-
-  }
-  else {
-    hmShow = null;
-
-  }
-
-  return hmShow;
-}
 
 export default App;

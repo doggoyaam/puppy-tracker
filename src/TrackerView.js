@@ -27,6 +27,7 @@ import moment from 'moment';
 import styled from 'styled-components'
 
 import EventTrack from './EventTrack';
+import { getDates } from './utils';
 const auth = firebaseApp.auth();
 const firestore = firebaseApp.firestore();
 // const analytics = firebase.analytics();
@@ -34,43 +35,6 @@ var _ = require('lodash');
 
 const evCollectionName = process.env.REACT_APP_FIREBASE_APP_COLL_NAME;
 
-
-
-
-function getDates(numDaysBack) {
-    let today = new Date();
-
-    var dateArray = [];
-
-
-    for (var i = 0; i < numDaysBack; i++) {
-        // get the date for each date to look in past
-        // first item should be today
-        if (i === 0) {
-            var tdateString = moment(today).format('YYYY-MM-DD');
-            dateArray.push(tdateString);
-        }
-        else {
-            let dayAgoObj = new Date();
-            dayAgoObj.setDate(today.getDate() - i);
-            var adateString = moment(dayAgoObj).format('YYYY-MM-DD');
-
-            dateArray.push(adateString);
-        }
-    }
-
-
-    // console.log('Today: ' + today);
-    // console.log('Yesterday: ' + yesterday);
-    // console.log(dateArray);
-    // var currentDate = moment(startDate);
-    // var stopDate = moment(stopDate);
-    // while (currentDate <= stopDate) {
-    //     dateArray.push( moment(currentDate).format('YYYY-MM-DD') )
-    //     currentDate = moment(currentDate).add(1, 'days');
-    // }
-    return dateArray;
-}
 
 
 function TrackerView() {

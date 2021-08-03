@@ -12,6 +12,7 @@ import moment from 'moment';
 import styled from 'styled-components'
 
 import useShareableState from './ShareableState';
+import { dateDiffs, fmtTimeAgo } from './utils';
 
 
 const auth = firebaseApp.auth();
@@ -20,84 +21,6 @@ const firestore = firebaseApp.firestore();
 var _ = require('lodash');
 
 const evCollectionName = process.env.REACT_APP_FIREBASE_APP_COLL_NAME;
-
-
-
-const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-const _ms_to_sec = 1000;
-const _ms_to_min = 1000 * 60;
-const _ms_to_hour = 1000 * 60 * 60;
-
-
-// a and b are javascript Date objects
-function dateDiffs(a, b) {
-    // Discard the time and time-zone information.
-    // const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-    // const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-    const d = Math.abs(b - a);
-    // console.log(d);
-
-    const secs = d / _ms_to_sec;
-    const mins = d / _ms_to_min;
-    const hours = d / _ms_to_hour;
-    const days = Math.floor(d / _MS_PER_DAY);
-    // console.log(secs, mins, hours, days);
-
-    const ret = {
-        seconds: secs,
-        minutes: mins,
-        hours: hours,
-        days: days
-    }
-    return ret;
-
-    // return Math.floor((utc2 - utc1) / _MS_PER_DAY);
-}
-
-
-// function to take in the above date oobject and return a human redible subtitle
-// dictating how long ago the event took place
-// scheme: 
-// - If minutes <= 1 . Display seconds ago
-// - If hours <= 1. Display minutes, seconds ago
-// - If days <= 1. Display hours, minutes ago
-// - If days > 0. Display Days ago
-
-
-function fmtTimeAgo(dObj) {
-    var s = null;
-
-    if (dObj.minutes <= 1) {
-        var secsAll = Math.floor(dObj.seconds);
-
-        s = `${secsAll}s ago`;
-    }
-    else if (dObj.hours <= 1) {
-        var minsAll = Math.floor(dObj.minutes);
-
-        s = `${minsAll}m ago`;
-    }
-    else if (dObj.days < 1) {
-        var hrs = Math.floor(dObj.hours);
-        var minsAll = Math.floor(dObj.minutes);
-        var minsLeft = minsAll - hrs * 60;
-        s = `${hrs}h${minsLeft}m ago`;
-
-        // just do hours ago 
-        // s = `${hrs} hours ago`;
-
-
-    }
-    else if (dObj.days >= 1) {
-        // var hrs = Math.floor(dObj.hours);
-        // var minsAll = Math.floor(dObj.minutes);
-        // var minsLeft = minsAll - hrs * 60;
-        s = `${dObj.days} days ago`;
-
-    }
-    return s;
-
-}
 
 
 
