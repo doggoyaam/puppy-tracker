@@ -142,13 +142,13 @@ function TrackerView() {
                     <Container fluid>
 
                         <p>{nowDateValue}</p>
-                        <EventTrack tdate={dateArr[0]} tdata={devents} />
+                        <EventTrack compId={1} tdate={dateArr[0]} tdata={devents} />
                     </Container>
 
                     <Container fluid>
 
                         <p>{nowDateValue}</p>
-                        <EventTrack tdate={dateArr[1]} tdata={deventsComp} />
+                        <EventTrack compId={2} tdate={dateArr[1]} tdata={deventsComp} />
                     </Container>
                 </Col>
             </Row>

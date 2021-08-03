@@ -23,6 +23,7 @@ const evCollectionName = process.env.REACT_APP_FIREBASE_APP_COLL_NAME;
 function EventTrack(props) {
     const trackDate = props.tdate;
     const trackData = props.tdata;
+    const evCompId = props.compId;
 
 
 
@@ -89,6 +90,7 @@ function EventTrack(props) {
     if (trackDataAll.length > 0) {
         hmShow = (<>
             <CalendarHeatmap
+                compId={evCompId}
                 data={trackDataAll}
                 overview={overview}
             >

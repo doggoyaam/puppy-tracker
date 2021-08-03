@@ -27,6 +27,19 @@ class CalendarHeatmap extends React.Component {
     // this.zoomState = null;
     this.in_transition = false
     this.overview = this.props.overview
+    // add support for compId so we can assign divId dynamically
+    // and hopefully staack multiple
+    this.compId = this.props.compId
+    console.log("Ev track COMP ID", this.props.compId);
+    // use this to refer heatmap to component
+    this.hmCidName = "#calendar-heatmap-cid" + this.props.compId
+    this.hmCidNamePlain = "calendar-heatmap-cid" + this.props.compId
+    // use this for hm wrapper
+    this.hmCidWrapperName = "#ch-wrapper-cid" + this.props.compId
+    this.hmCidWrapperNamePlain = "ch-wrapper-cid" + this.props.compId
+    console.log("Ev track COMP ID", this.props.compId, this.hmCidWrapperNamePlain);
+
+
     this.history = ['global']
     this.selected = {}
 
@@ -126,7 +139,7 @@ class CalendarHeatmap extends React.Component {
 
   createElements() {
     // Create svg element
-    this.svg = d3.select('#calendar-heatmap')
+    this.svg = d3.select(this.hmCidName)
       .append('svg')
       .attr('class', 'svg')
 
@@ -144,7 +157,7 @@ class CalendarHeatmap extends React.Component {
     this.linesLabels = this.svg.append('g');
 
     // Add tooltip to the same element as main svg
-    this.tooltip = d3.select('#calendar-heatmap')
+    this.tooltip = d3.select(this.hmCidName)
       .append('div')
       .attr('class', styles.heatmapTooltip)
       .style('opacity', 0)
@@ -1837,7 +1850,7 @@ class CalendarHeatmap extends React.Component {
     // disable zoom in/out behaviour 
     // only enable translate on xaxis
 
-    d3.select("#ch-warpper").call(d3.zoom()
+    d3.select(this.hmCidWrapperName).call(d3.zoom()
       .scaleExtent([1, 1])
       .translateExtent([
         [0, 0],
@@ -1845,8 +1858,8 @@ class CalendarHeatmap extends React.Component {
       ])
       .on("zoom", () => {
         // console.log("Zoomed");
-        // // d3.select("#ch-warpper").attr("transform", d3.event.transform);
-        const zoomState = zoomTransform(d3.select("#ch-warpper").node());
+        // // d3.select(this.hmCidWrapperName).attr("transform", d3.event.transform);
+        const zoomState = zoomTransform(d3.select(this.hmCidWrapperName).node());
         // console.log(zoomState);
         // console.log(d3.event);
         // this.labelsYAx.selectAll('.label-project')
@@ -1973,7 +1986,7 @@ class CalendarHeatmap extends React.Component {
     // Try sticky labels on scroll
 
     // bugTofix: only works when scroll on heatmap
-    // d3.select('#calendar-heatmap')
+    // d3.select(this.props.hmCidName)
     //   .on('mousewheel.scroll', () => {
 
     //     // how to access scroll event data
@@ -2211,8 +2224,8 @@ class CalendarHeatmap extends React.Component {
 
   render() {
     return (
-      <div id='ch-warpper'>
-        <div id='calendar-heatmap'
+      <div id={this.hmCidWrapperNamePlain}>
+        <div id={this.hmCidNamePlain}
           className={styles.calendarHeatmap}
           ref={elem => { this.container = elem }}>
         </div>
