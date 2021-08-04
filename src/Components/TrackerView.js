@@ -13,6 +13,7 @@ import firebaseApp from './FirebaseApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import Button from 'react-bootstrap/Button';
+import ToggleButton from 'react-bootstrap/ToggleButton'
 import Modal from 'react-bootstrap/Modal'
 import Form from "react-bootstrap/Form";
 import Container from 'react-bootstrap/Container'
@@ -36,6 +37,11 @@ function TrackerView() {
     // const dummy = useRef();
 
     const [nowDateValue, setNowDateValue] = useState(null);
+    const [compDateValue, setCompDateValue] = useState(null);
+
+    const [compareState, setCompareState] = useState(false);
+    const [showCompDtPicker, setShowCompDtPicker] = useState(false);
+
 
 
 
@@ -79,14 +85,48 @@ function TrackerView() {
 
     }
 
+    // set the prevStartComp date if user specified
+    var compStart = null;
+    var compEnd = null;
+    if (compDateValue === null) {
+        console.log("no comp date set, using default");
+        compStart = prevStart;
+        compEnd = prevEnd;
+    }
+    else {
+        console.log("comp date set");
+        // user picked date. set to the user date
+        const csDate = new Date(compDateValue);
+
+        let csprevStart = moment(csDate).toDate();
+        // prevStart.setMinutes(prevStart.getMinutes() - prevStart.getTimezoneOffset());
+        // prevStart.setDate(start.getDate() - 1);
+
+        csprevStart.setHours(0, 0, 0, 0);
+
+        console.log("Prev start", csprevStart);
+
+
+        let csprevEnd = moment(csDate).toDate();
+        // prevEnd.setMinutes(prevEnd.getMinutes() - prevEnd.getTimezoneOffset());
+        // prevEnd.setDate(end.getDate() - 1);
+
+        csprevEnd.setHours(23, 59, 59, 999);
+
+        compStart = csprevStart;
+        compEnd = csprevEnd;
+
+    }
+
+
     const query = dgevents.where('start_time', ">=", start)
         .where('start_time', "<", end)
         .orderBy('start_time', 'desc');
     // .limit(25);
     const [devents] = useCollectionData(query, { idField: 'id' });
 
-    const queryComp = dgevents.where('start_time', ">=", prevStart)
-        .where('start_time', "<", prevEnd)
+    const queryComp = dgevents.where('start_time', ">=", compStart)
+        .where('start_time', "<", compEnd)
         .orderBy('start_time', 'desc');
     // .limit(25);
     const [deventsComp] = useCollectionData(queryComp, { idField: 'id' });
@@ -101,6 +141,7 @@ function TrackerView() {
     // console.log("events:", devents);
     // console.log(d0events);
     // return null;
+    console.log("Compare state", compareState);
 
 
     // add current date time to window
@@ -120,38 +161,76 @@ function TrackerView() {
         []
     )
 
+    const handleClickCompDate = (e) => {
+        console.log("Clicked on compare date", e);
+        setShowCompDtPicker(true);
+    }
+
+    let compElem = null;
+    if (compareState === true) {
+        var cdateString = moment(compStart).format('YYYY-MM-DD');
+        compElem = (<>
+            <Container fluid>
+
+                <div onClick={handleClickCompDate}>
+                    <p style={{ 'color': '#000' }}>{cdateString}</p>
+                    <Form.Control size='sm' type="date" name='start_date_comp' defaultValue={cdateString} onChange={changeEvent => setCompDateValue(changeEvent.target.value)} />
+                </div>
+                <EventTrack compId={2} tdate={cdateString} tdata={deventsComp} />
+            </Container>
+
+        </>);
+    }
+
 
 
     return (<>
         <div class="scheduleblur">
 
             <h3>Schedule</h3>
+            <Container fluid>
 
-            <Row>
-                <Col>
-                    <Form.Group controlId="exampleForm.ControlInputSch1" as={Row} className="mb-3">
-                        <Form.Label column sm={4}> Select Date</Form.Label>
-                        <Col sm={6}>
+                <Row>
+                    <Col>
+                        <Form.Group controlId="exampleForm.ControlInputSch1" as={Row} >
+                            <Col sm={4}>
+                                <Form.Label > Select Date</Form.Label>
+                            </Col>
+                            <Col sm={5}>
 
-                            <Form.Control type="date" name='start_date' defaultValue={nowDateValue} onChange={changeEvent => setNowDateValue(changeEvent.target.value)} />
-                        </Col>
-                    </Form.Group>
+                                <Form.Control size='sm' type="date" name='start_date' defaultValue={nowDateValue} onChange={changeEvent => setNowDateValue(changeEvent.target.value)} />
+                            </Col>
+                            <Col sm={2}>
+                                <ToggleButton
+                                    id="toggle-check"
+                                    type="checkbox"
+                                    variant="outline-dark"
+                                    checked={compareState}
+                                    defaultValue={compareState}
+                                    size='sm'
+                                    value="1"
+                                    onChange={changeEvent => setCompareState(changeEvent.currentTarget.checked)}
+                                >
+                                    <div>Compare</div>
+                                </ToggleButton>
 
-                </Col>
-                <Col>
-                    <Container fluid>
+                            </Col>
 
-                        <p>{nowDateValue}</p>
-                        <EventTrack compId={1} tdate={dateArr[0]} tdata={devents} />
-                    </Container>
+                        </Form.Group>
 
-                    <Container fluid>
 
-                        <p>{nowDateValue}</p>
-                        <EventTrack compId={2} tdate={dateArr[1]} tdata={deventsComp} />
-                    </Container>
-                </Col>
-            </Row>
+                        <Container fluid>
+
+                            <p style={{ 'color': '#000' }}>{nowDateValue}</p>
+                            <EventTrack compId={1} tdate={dateArr[0]} tdata={devents} />
+                        </Container>
+
+                        {compElem}
+
+
+                    </Col>
+                </Row>
+            </Container>
         </div>
 
 

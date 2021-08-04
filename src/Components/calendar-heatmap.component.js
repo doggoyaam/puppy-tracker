@@ -1531,10 +1531,14 @@ class CalendarHeatmap extends React.Component {
         if (this.in_transition) { return }
 
         // Construct tooltip
+        let tpdivid = "tpdid-cid" + this.hmCidName;
         let tooltip_html = ''
+        // tooltip_html += `<div id="${this.hmCidName}">`
         tooltip_html += `<div class="${styles.header}"><strong>${d.name}</strong><div><br>`
         tooltip_html += '<div><strong>' + (d.value ? this.formatTime(d.value) : 'No time') + ' tracked</strong></div>'
         tooltip_html += '<div>on ' + moment(d.date).format('dddd, MMM Do YYYY HH:mm') + '</div>'
+        // tooltip_html += '</div>'
+
 
         // Calculate tooltip position
         let x = d.value * 100 / (60 * 60 * 24) + itemScale(moment(d.date))
@@ -1542,6 +1546,17 @@ class CalendarHeatmap extends React.Component {
           x -= 10
         }
         let y = projectScale(d.name) + projectScale.bandwidth() / 2 + this.settings.tooltip_padding / 2
+
+
+        // hack to fix tooltip ypos
+        if (this.compId === 2) {
+          y += 250;
+        }
+        // or just use current ypos of user
+        // console.log("Y", y, "YEv", d3.event.y);
+        // console.log(d3.event);
+        // let y = d3.event.y// + this.settings.tooltip_padding / 2
+
 
         // Show tooltip
         this.tooltip.html(tooltip_html)
