@@ -775,7 +775,6 @@ function App() {
 
     }
     // show layout for logged in users
-
     usrLayout = (
       <div class="App">
         <Fab
