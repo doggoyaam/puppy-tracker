@@ -21,6 +21,9 @@ import { Offline, Online } from "react-detect-offline";
 import moment from 'moment';
 // import { interpolateNumber, timeMillisecond } from 'd3';
 
+import { Fab, Action } from 'react-tiny-fab';
+import 'react-tiny-fab/dist/styles.css';
+
 import useShareableState from './Components/ShareableState';
 import TimeLine from './Components/Timeline';
 import TrackerView from './Components/TrackerView';
@@ -774,6 +777,21 @@ function App() {
     // show layout for logged in users
     usrLayout = (
       <div class="App">
+        <Fab
+          icon="d"
+        >
+          <Action
+            text="Suggestions"
+          />
+          <Action
+            text="Analysis"
+          />
+          <Action
+            text="Customize"
+          >
+            <i className="fa fa-help" />
+          </Action>
+        </Fab>
         <header>
           <div onClick={showAboutMsg}>
             {headComp}
