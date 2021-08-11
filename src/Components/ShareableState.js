@@ -60,6 +60,18 @@ const useShareableState = () => {
     const [showFilterEvents, setShowFilterEvents] = useState(false);
     const [filterStartTimeValue, setfilterStartTimeValue] = useState(null);
 
+    // handle filter by event type
+    const [filterNapChecked, setFilterNapChecked] = useState(false);
+    const [filterFoodChecked, setFilterFoodChecked] = useState(false);
+    const [filterWaterChecked, setFilterWaterChecked] = useState(false);
+    const [filterAccidentChecked, setFilterAccidentChecked] = useState(false);
+    const [filterPoopChecked, setFilterPoopChecked] = useState(false);
+    const [filterPeeChecked, setFilterPeeChecked] = useState(false);
+
+    // const [filterEventsValue, setFilterEventsValue] = useState("");
+
+
+
 
 
     // const [count, setCount] = useState(0);
@@ -135,7 +147,20 @@ const useShareableState = () => {
         showFilterEvents,
         setShowFilterEvents,
         filterStartTimeValue,
-        setfilterStartTimeValue
+        setfilterStartTimeValue,
+
+        filterNapChecked,
+        setFilterNapChecked,
+        filterFoodChecked,
+        setFilterFoodChecked,
+        filterWaterChecked,
+        setFilterWaterChecked,
+        filterAccidentChecked,
+        setFilterAccidentChecked,
+        filterPoopChecked,
+        setFilterPoopChecked,
+        filterPeeChecked,
+        setFilterPeeChecked
     }
 }
 export default useShareableState;

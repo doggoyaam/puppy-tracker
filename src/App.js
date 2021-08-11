@@ -11,6 +11,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
 import Form from "react-bootstrap/Form";
+
 import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
@@ -144,7 +145,20 @@ function App() {
     showFilterEvents,
     setShowFilterEvents,
     filterStartTimeValue,
-    setfilterStartTimeValue
+    setfilterStartTimeValue,
+
+    filterNapChecked,
+    setFilterNapChecked,
+    filterFoodChecked,
+    setFilterFoodChecked,
+    filterWaterChecked,
+    setFilterWaterChecked,
+    filterAccidentChecked,
+    setFilterAccidentChecked,
+    filterPoopChecked,
+    setFilterPoopChecked,
+    filterPeeChecked,
+    setFilterPeeChecked
   } = useBetween(useShareableState);
 
 
@@ -689,6 +703,51 @@ function App() {
     } else {
       console.log("No start time for filter", stTime);
 
+      // use keys to get which event types were seleced
+
+      // check each event
+      if (formDataObj.hasOwnProperty("Nap")) {
+        // console.log("Got Nap");
+        setFilterNapChecked(true);
+      } else {
+        setFilterNapChecked(false);
+      }
+
+      if (formDataObj.hasOwnProperty("Food")) {
+        // console.log("Got Food");
+        setFilterFoodChecked(true);
+      } else {
+        setFilterFoodChecked(false);
+      }
+
+      if (formDataObj.hasOwnProperty("Water")) {
+        // console.log("Got Water");
+        setFilterWaterChecked(true);
+      } else {
+        setFilterWaterChecked(false);
+      }
+
+      if (formDataObj.hasOwnProperty("Accident")) {
+        // console.log("Got Accident");
+        setFilterAccidentChecked(true);
+      } else {
+        setFilterAccidentChecked(false);
+      }
+
+      if (formDataObj.hasOwnProperty("Poop")) {
+        // console.log("Got Poop");
+        setFilterPoopChecked(true);
+      } else {
+        setFilterPoopChecked(false);
+      }
+
+      if (formDataObj.hasOwnProperty("Pee")) {
+        // console.log("Got Pee");
+        setFilterPeeChecked(true);
+      } else {
+        setFilterPeeChecked(false);
+      }
+
     }
 
     setShowFilterEvents(false);
@@ -703,6 +762,13 @@ function App() {
 
     console.log("Clearing filter");
     setfilterStartTimeValue(null);
+
+    setFilterNapChecked(false);
+    setFilterFoodChecked(false);
+    setFilterWaterChecked(false);
+    setFilterAccidentChecked(false);
+    setFilterPoopChecked(false);
+    setFilterPeeChecked(false);
 
     setShowFilterEvents(false);
 
@@ -775,24 +841,28 @@ function App() {
 
     }
     // show layout for logged in users
-    // we good?
+
+    // TODO: add FAB
+    let fabComp = (<>
+      <Fab
+        icon="d"
+      >
+        <Action
+          text="Suggestions"
+        />
+        <Action
+          text="Analysis"
+        />
+        <Action
+          text="Customize"
+        >
+          <i className="fa fa-help" />
+        </Action>
+      </Fab>
+    </>);
     usrLayout = (
       <div class="App">
-        <Fab
-          icon="d"
-        >
-          <Action
-            text="Suggestions"
-          />
-          <Action
-            text="Analysis"
-          />
-          <Action
-            text="Customize"
-          >
-            <i className="fa fa-help" />
-          </Action>
-        </Fab>
+
         <header>
           <div onClick={showAboutMsg}>
             {headComp}
@@ -1392,6 +1462,64 @@ function App() {
                   <Form.Group controlId="exampleForm.ControlInput1Edit7">
                     <Form.Label>Start Time</Form.Label>
                     <Form.Control type="date" name='start_time' defaultValue={filterStartTimeValue} />
+                    <br></br>
+
+                    <Form.Label>Event Type</Form.Label>
+                    <div key="inline-checkbox" className="mb-3">
+                      <Form.Check
+                        inline
+                        label="Nap"
+                        name="Nap"
+                        type="checkbox"
+                        id="inline-checkbox-1"
+                        defaultChecked={filterNapChecked}
+                      />
+                      <Form.Check
+                        inline
+                        label="Food"
+                        name="Food"
+                        type="checkbox"
+                        id="inline-checkbox-2"
+                        defaultChecked={filterFoodChecked}
+
+                      />
+                      <Form.Check
+                        inline
+                        label="Water"
+                        name="Water"
+                        type="checkbox"
+                        id="inline-checkbox-3"
+                        defaultChecked={filterWaterChecked}
+
+                      />
+                      <Form.Check
+                        inline
+                        label="Accident"
+                        name="Accident"
+                        type="checkbox"
+                        id="inline-checkbox-4"
+                        defaultChecked={filterAccidentChecked}
+
+                      />
+                      <Form.Check
+                        inline
+                        label="Poop"
+                        name="Poop"
+                        type="checkbox"
+                        id="inline-checkbox-5"
+                        defaultChecked={filterPoopChecked}
+
+                      />
+                      <Form.Check
+                        inline
+                        label="Pee"
+                        name="Pee"
+                        type="checkbox"
+                        id="inline-checkbox-6"
+                        defaultChecked={filterPeeChecked}
+
+                      />
+                    </div>
 
 
                   </Form.Group>

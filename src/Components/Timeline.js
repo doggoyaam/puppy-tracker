@@ -101,7 +101,20 @@ function TimeLine() {
         showFilterEvents,
         setShowFilterEvents,
         filterStartTimeValue,
-        setfilterStartTimeValue
+        setfilterStartTimeValue,
+
+        filterNapChecked,
+        setFilterNapChecked,
+        filterFoodChecked,
+        setFilterFoodChecked,
+        filterWaterChecked,
+        setFilterWaterChecked,
+        filterAccidentChecked,
+        setFilterAccidentChecked,
+        filterPoopChecked,
+        setFilterPoopChecked,
+        filterPeeChecked,
+        setFilterPeeChecked
     } = useBetween(useShareableState);
 
     const dgevents = firestore.collection(evCollectionName);
@@ -112,6 +125,38 @@ function TimeLine() {
         console.log("no filter value");
         // default qquery
         query = dgevents.orderBy('start_time', 'desc').limit(30);
+
+
+        // check if event filters were applied and append to query accordingly
+        // Note, we had to create composite indicies on the type field and start_time field
+        // Due to the firebase db. If we didnt, OrderBy does not work with where out of the box
+        if (filterNapChecked === true) {
+            query = dgevents.where('type', "==", "Nap").orderBy('start_time', 'desc').limit(30);
+        }
+        else if (filterFoodChecked === true) {
+            query = dgevents.where('type', "==", "Food").orderBy('start_time', 'desc').limit(30);
+        }
+        else if (filterWaterChecked === true) {
+            query = dgevents.where('type', '==', 'Water').orderBy('start_time', 'desc').limit(30);
+        }
+        else if (filterAccidentChecked === true) {
+            query = dgevents.where('type', "==", "Accident").orderBy('start_time', 'desc').limit(30);
+        }
+        else if (filterPoopChecked === true) {
+            query = dgevents.where('type', "==", "Poop").orderBy('start_time', 'desc').limit(30);
+        }
+        else if (filterPeeChecked === true) {
+            query = dgevents.where('type', "==", "Pee").orderBy('start_time', 'desc').limit(30);
+        }
+        // else {
+
+        //     // default qquery
+        //     query = dgevents.orderBy('start_time', 'desc').limit(30);
+
+
+        // }
+
+
     } else {
         console.log("Got filter val", filterStartTimeValue);
 
@@ -129,8 +174,12 @@ function TimeLine() {
 
 
 
+    console.log("Query", query)
+
+
+
     const [devents] = useCollectionData(query, { idField: 'id' });
-    // console.log(devents);
+    console.log(devents);
 
 
 
