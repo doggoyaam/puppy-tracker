@@ -125,9 +125,16 @@ function TrackerView() {
     // .limit(25);
     const [devents] = useCollectionData(query, { idField: 'id' });
 
-    const queryComp = dgevents.where('start_time', ">=", compStart)
-        .where('start_time', "<", compEnd)
-        .orderBy('start_time', 'desc');
+
+    // only get comp data if user selected
+    var queryComp;
+    if (compareState === true) {
+        queryComp = dgevents.where('start_time', ">=", compStart)
+            .where('start_time', "<", compEnd)
+            .orderBy('start_time', 'desc');
+    }
+
+
     // .limit(25);
     const [deventsComp] = useCollectionData(queryComp, { idField: 'id' });
     console.log("DEV COMP", deventsComp);

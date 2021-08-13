@@ -30,7 +30,11 @@ import TimeLine from './Components/Timeline';
 import TrackerView from './Components/TrackerView';
 import SignIn from './Components/SignIn';
 import SignOut from './Components/SignOut';
-
+import {
+  isDesktop,
+  isMobile,
+  isSafari
+} from "react-device-detect";
 const auth = firebaseApp.auth();
 const firestore = firebaseApp.firestore();
 // const analytics = firebase.analytics();
@@ -177,6 +181,7 @@ function App() {
       let nowTimeStr = now.toISOString().slice(0, 16);
       // console.log("Now time", nowTimeStr);
       setNowTimeValue(nowTimeStr);
+      console.log("Is safari", isSafari);
     },
     [showNap, showFood, showWater, showAccdnt, showPee, showPoop]
   )
@@ -792,6 +797,9 @@ function App() {
   }
 
 
+  // Browser detection
+
+
   var activeTabComp = null;
   var activeTabCompLabel = null;
 
@@ -868,12 +876,11 @@ function App() {
             {headComp}
           </div>
           <div>
-            <Online>Only shown when you're online</Online>
-            <Offline>Only shown offline (surprise!)</Offline>
+            <Online>Online</Online>
+            <Offline>Offline</Offline>
           </div>
           <SignOut />
         </header>
-
         <div class="maincontainer">
 
 
@@ -886,6 +893,7 @@ function App() {
             </svg>
 
           </div>
+
 
 
           <div>
