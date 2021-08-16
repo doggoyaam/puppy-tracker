@@ -208,13 +208,15 @@ img {
 
 
 .cardTop{
+
+  width:497px;
+  height:284px;
   
-  width:100%;
-  /* min-width:375px; */
-  max-width:497px;
-  height:100%;
+  /* width:100%; */
+  /* max-width:497px;
+  /* height:100%; */
   /* max-height:284px; */
-  min-height:284px;
+  /* min-height:284px; */
   background: #2C2217;
   border-radius: 20px;
   display:flex;
